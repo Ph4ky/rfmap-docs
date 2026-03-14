@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hornet Sentinel — RF Direction Finding C2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<header>
+  <div class="hero-inner">
+    <div class="badge">⬡ HORNET<span>SENTINEL</span></div>
+    <p class="tagline">Sovereign RF Direction Finding &amp; Triangulation</p>
+    <p class="sub">On-premise C2 system for real-time signal source localisation using KrakenSDR hardware.<br>
+    No cloud dependency — fully autonomous infrastructure.</p>
+    <div class="hero-tags">
+      <span>KrakenSDR</span><span>DOA / TDOA</span><span>Leaflet.js</span>
+      <span>PostgreSQL</span><span>Docker</span><span>ZeroTier VPN</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#features">Features</a>
+  <a href="#simulation">Simulation</a>
+  <a href="#setup">Setup</a>
+  <a href="#api">API</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<!-- ── Features ─────────────────────────────────────────────────────────────── -->
+<section id="features">
+  <h2>Features</h2>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-icon">📡</div>
+      <h3>Live DOA Tracking</h3>
+      <p>Real-time direction-of-arrival lines from multiple KrakenSDR stations. Auto-refresh every 4 s. DOA lines automatically extend 30% past the farthest intersection point.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>Triangulation</h3>
+      <p>Spherical bearing intersection of two or more station rays. With N stations, N×(N−1)/2 intersection pairs are computed. Confidence-weighted centroid as best estimate.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🗺️</div>
+      <h3>Sovereign Mapping</h3>
+      <p>SwissImage (swisstopo), Ortho (Esri + labels), Swisstopo topographic, Dark and Light basemaps — all tile-cached locally for disconnected operations.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">⬡</div>
+      <h3>Simulation Mode</h3>
+      <p>Frontend-only mission planning tool. Simulate TX power, noise, environment loss and GDOP geometry before field deployment. Animation mode visualises measurement scatter in real time.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📐</div>
+      <h3>GDOP Optimiser</h3>
+      <p>Computes geometry quality (0–100%) and suggests optimal station positions. When TX power is known, range constraint based on FSPL limits the deployment radius physically.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📏</div>
+      <h3>Station Distances</h3>
+      <p>Optional layer draws labelled lines between all station pairs — distances in metres or kilometres. Useful for tactical spacing and frequency planning.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔧</div>
+      <h3>Frequency Advisor</h3>
+      <p>Integrated in the station config modal. Detects known interferers (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) in the sampling band and recommends the optimal sample rate with one click.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🧭</div>
+      <h3>Azimuth Calibration</h3>
+      <p>Place a calibration marker on a known reference transmitter. The system calculates per-station azimuth corrections applied server-side retroactively to all historical data.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📍</div>
+      <h3>Position Override</h3>
+      <p>Drag station markers to correct GPS errors. Override coordinates are saved and used for DOA lines, triangulation and calibration. New stations auto-placed in the current map area.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔥</div>
+      <h3>Heatmap</h3>
+      <p>Density map of intersection points over time — shows signal source dwell areas even when individual intersections are noisy.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <h3>Remote Config &amp; Deploy</h3>
+      <p>Push receiver settings (frequency, gain, DOA method, array type) to all stations simultaneously. SSH-deploy the config sync script directly from the portal.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>Mobile Ready</h3>
+      <p>Responsive toolbar, off-canvas panel, full-screen config modal. Dedicated ⬡ button activates simulation on mobile where logo triple-tap isn't accessible.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Simulation ────────────────────────────────────────────────────────────── -->
+<section id="simulation">
+  <h2>Simulation Mode</h2>
+  <p class="section-intro">Hidden mission planning tool — no database writes, purely frontend. Activate with a triple-click on the logo (desktop) or the ⬡ button (mobile).</p>
+
+  <div class="sim-params">
+    <div class="param">
+      <span class="param-name">TX Power</span>
+      <span class="param-range">0 – 50 000 mW</span>
+      <span class="param-desc">0 = unknown (no range constraint). When set, stations beyond FSPL range drop out automatically.</span>
+    </div>
+    <div class="param">
+      <span class="param-name">Environment</span>
+      <span class="param-range">0 – 40 dB</span>
+      <span class="param-desc">Additional propagation loss: Freifeld / Offenes Gelände / Suburban / Urban+Wald / Dicht bebaut</span>
+    </div>
+    <div class="param">
+      <span class="param-name">Noise</span>
+      <span class="param-range">0 – 30°</span>
+      <span class="param-desc">DOA angular error. 5–10° = realistic field, 15–25° = heavy multipath / forest.</span>
+    </div>
+    <div class="param">
+      <span class="param-name">Trails</span>
+      <span class="param-range">0 – 12</span>
+      <span class="param-desc">Number of simulated measurement rounds shown as transparent trail lines.</span>
+    </div>
+    <div class="param">
+      <span class="param-name">Animate</span>
+      <span class="param-range">200 – 2000 ms</span>
+      <span class="param-desc">Continuous re-render with new random noise — lines and polygon wander to visualise measurement uncertainty.</span>
+    </div>
+  </div>
+
+  <h3>Physics Model</h3>
+  <div class="code-block">
+FSPL  = 32.44 + 20·log₁₀(d_km) + 20·log₁₀(f_MHz)
+P_rx  = TX_dBm − FSPL − env_loss_dB
+Threshold: −110 dBm (KrakenSDR sensitivity)
+
+Example — 100 mW TX at 148.537 MHz:
+  Freifeld    (0 dB)   →  ~40 km range
+  Suburban   (20 dB)   →   ~4 km range
+  Urban/Wald (30 dB)   → ~1.3 km range</div>
+
+  <h3>GDOP Geometry</h3>
+  <div class="code-block">
+Ideal cut angle = 180° / N stations
+N=2 → 90°   N=3 → 120°   N=4 → 45° (semicircle)
+
+Position error ≈ distance × tan(noise_angle)
+  500 m  @  5° noise  →  ~44 m error
+  2 km   @  5° noise  →  ~175 m error
+  5 km   @ 10° noise  →  ~882 m error</div>
+</section>
+
+<!-- ── Setup ─────────────────────────────────────────────────────────────────── -->
+<section id="setup">
+  <h2>Quick Setup</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Clone &amp; Configure</h3>
+        <div class="code-block">git clone https://github.com/Ph4ky/rfmap.git && cd rfmap
+cp .env.example .env
+# Set DB_PASSWORD and API_KEYS in .env</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>SSL Certificate</h3>
+        <div class="code-block">mkdir ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout ssl/key.pem -out ssl/cert.pem -subj "/CN=rfmap"</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Start Services</h3>
+        <div class="code-block">docker compose up -d --build
+# HTTPS: https://&lt;server-ip&gt;:8443
+# HTTP:  http://&lt;server-ip&gt;:8080</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>KrakenSDR Station</h3>
+        <div class="code-block"># In portal: Settings → Enter IP, SSH creds, API key → Deploy Script
+# In KrakenSDR software set Output URL:
+http://&lt;server-ip&gt;:8080/save.php?api_key=&lt;key&gt;</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Architecture</h3>
+  <div class="code-block">KrakenSDR Pi (mobile)
+  ├── GPS + Compass → absolute bearing
+  ├── POST /save.php → Portal (HTTP, ZeroTier VPN)
+  └── krakensdrd_config_sync.py (polls for config changes)
+
+Portal (Docker)
+  ├── Node.js (Express) — REST API
+  ├── PostgreSQL + PostGIS — data storage
+  ├── Nginx — HTTPS :8443 / HTTP :8080
+  └── Static frontend — Leaflet.js, dark theme</div>
+</section>
+
+<!-- ── API ───────────────────────────────────────────────────────────────────── -->
+<section id="api">
+  <h2>API Reference</h2>
+  <table>
+    <thead>
+      <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>POST</td><td>/save.php</td><td>?api_key=</td><td>KrakenSDR report (form-encoded, RDF Mapper compatible)</td></tr>
+      <tr><td>POST</td><td>/api/report</td><td>X-Api-Key</td><td>KrakenSDR report (JSON)</td></tr>
+      <tr><td>GET</td><td>/api/live</td><td>—</td><td>Recent DOA reports + computed intersections</td></tr>
+      <tr><td>GET</td><td>/api/history</td><td>—</td><td>Historical DOA reports by time range</td></tr>
+      <tr><td>GET</td><td>/api/heatmap</td><td>—</td><td>Intersection heatmap points</td></tr>
+      <tr><td>GET</td><td>/api/stations</td><td>—</td><td>Station list with last position</td></tr>
+      <tr><td>POST</td><td>/api/stations</td><td>X-Api-Key</td><td>Register new station</td></tr>
+      <tr><td>GET</td><td>/api/station/:id/config</td><td>—</td><td>Station config (polled by Pi)</td></tr>
+      <tr><td>PUT</td><td>/api/station/:id/config</td><td>X-Api-Key</td><td>Save station config</td></tr>
+      <tr><td>PUT</td><td>/api/stations/config</td><td>X-Api-Key</td><td>Push config to all stations</td></tr>
+      <tr><td>POST</td><td>/api/station/:id/deploy</td><td>X-Api-Key</td><td>SSH-deploy config sync script</td></tr>
+      <tr><td>POST</td><td>/api/station/:id/control</td><td>X-Api-Key</td><td>Start / stop / status DOA process</td></tr>
+      <tr><td>DELETE</td><td>/api/station/:id</td><td>X-Api-Key</td><td>Delete station + all data</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── FAQ ───────────────────────────────────────────────────────────────────── -->
+<section id="faq">
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>Why does the error polygon change size when I move the target?</summary>
+    <p>Two geometric effects: <strong>cut angle (GDOP)</strong> — lines near-parallel to each other produce a huge, unstable intersection. And <strong>distance</strong> — same angular noise at 5 km = 5× larger position error than at 1 km. Optimal: stations surrounding the target with ~60–90° cut angles.</p>
+  </details>
+
+  <details>
+    <summary>Why does a station disappear in simulation?</summary>
+    <p>The FSPL model computes received power. If it drops below −110 dBm (KrakenSDR sensitivity) the station «hears nothing». Increase TX power, reduce environment loss, or move station closer to target.</p>
+  </details>
+
+  <details>
+    <summary>What is TX Power = 0?</summary>
+    <p>Setting TX to 0 means «unknown». The GDOP optimizer runs without a range constraint (no orange range circle). The simulation itself uses 1000 mW internally so stations remain visible.</p>
+  </details>
+
+  <details>
+    <summary>What does the Frequency Advisor do?</summary>
+    <p>It checks whether known interferers (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) fall into the sampling band. It then recommends the smallest KrakenSDR-compatible sample rate that excludes all detected interferers. For CH 148.537 MHz: sample rate ≤ 1.024 MHz keeps CH pagers out of band.</p>
+  </details>
+
+  <details>
+    <summary>Does the system work offline?</summary>
+    <p>Yes. All map tiles are cached locally (<code>/app/tile-cache/</code>). The system is designed for disconnected operations.</p>
+  </details>
+
+  <details>
+    <summary>How many stations are recommended?</summary>
+    <p>Minimum 2 (1 intersection). Optimal 3 (3 intersections, error triangle visible). Ideal 4+ (6+ intersections, robust even if one station fails).</p>
+  </details>
+
+  <details>
+    <summary>How does azimuth calibration work?</summary>
+    <p>Place a test transmitter at a known position, drag the calibration marker to that position, and click «Korrekturen übernehmen». The correction is applied server-side at query time — retroactively fixes all historical data without reprocessing.</p>
+  </details>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <p>Hornet Sentinel v1.1 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
+  <p style="margin-top:6px;font-size:11px;opacity:.5">Private repository — source not publicly available</p>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))
+        .scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Highlight active nav on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
