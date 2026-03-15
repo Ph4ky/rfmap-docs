@@ -71,7 +71,7 @@
     <div class="card">
       <div class="card-icon">⬡</div>
       <h3>Simulation Mode</h3>
-      <p>Frontend-only mission planning tool. Simulate TX power, noise, environment loss and GDOP geometry before field deployment. Animation mode visualises measurement scatter in real time.</p>
+      <p>Frontend-only mission planning tool. Simulate TX power, noise, environment loss and GDOP geometry before field deployment. Animation mode visualises measurement scatter in real time. Route simulation moves the target along a multi-waypoint path at a defined speed.</p>
     </div>
 
     <div class="card">
@@ -154,7 +154,12 @@
     <div class="param">
       <span class="param-name">Animate</span>
       <span class="param-range">200 – 2000 ms</span>
-      <span class="param-desc">Continuous re-render with new random noise — lines and polygon wander to visualise measurement uncertainty.</span>
+      <span class="param-desc">Continuous re-render with new random noise — lines and polygon wander to visualise measurement uncertainty. Heatmap and GDOP quality badge update live during animation.</span>
+    </div>
+    <div class="param">
+      <span class="param-name">Route</span>
+      <span class="param-range">≥ 2 waypoints · 1 – 500 km/h</span>
+      <span class="param-desc">Define a multi-point route: move the target marker to each position and click <strong>+Pkt</strong>. The marker follows the route at the given speed when animation runs. Undo removes the last waypoint. Total route length is shown on the map.</span>
     </div>
   </div>
 
@@ -188,6 +193,22 @@ Example — 100 mW (+20 dBm) TX at 148.537 MHz:
     </tbody>
   </table>
   <p style="font-size:12px;opacity:.7;margin-top:8px">Environment loss (suburban +20 dB, urban/forest +30 dB) divides range by ~10–30×. Full table: <code>docs/link-budget-148mhz.md</code> in the rfmap repo.</p>
+
+  <h3>Route Simulation — Moving Target</h3>
+  <p style="font-size:13px;opacity:.8;margin-bottom:8px">Plan transmitter movement before a field deployment — especially useful with only 2 stations to find paths with acceptable GDOP throughout.</p>
+  <div class="code-block">Workflow:
+1. Place target marker at start position → click +Pkt
+2. Move marker to next point (bend, road junction) → click +Pkt
+3. Repeat for every waypoint — any number supported
+4. Set speed (km/h) and enable Animate
+   → marker travels along the route, predict polygon accumulates
+
+On the map:
+  Green circle  = waypoint 1 (start)
+  Yellow circles = intermediate waypoints (numbered)
+  Red circle    = last waypoint (end)
+  White dashed line + ∑ distance label connects all points
+  ↩ removes last waypoint · ✕ clears entire route</div>
 
   <h3>GDOP Geometry</h3>
   <p style="font-size:13px;opacity:.8;margin-bottom:8px">GDOP (Geometric Dilution of Precision): <strong>lower value = better geometry</strong>. Score 100% = ideal angular spread between stations.</p>
@@ -324,11 +345,16 @@ Portal (Docker)
     <summary>How does azimuth calibration work?</summary>
     <p>Place a test transmitter at a known position, drag the calibration marker to that position, and click «Korrekturen übernehmen». The correction is applied server-side at query time — retroactively fixes all historical data without reprocessing.</p>
   </details>
+
+  <details>
+    <summary>How does route simulation help with 2-station geometry?</summary>
+    <p>With only 2 stations you get a single bearing intersection. Cut angle (and therefore position error) varies drastically depending on where the target is relative to the baseline. Use route simulation to walk candidate transmitter paths and watch the GDOP quality badge live — green means the geometry holds, red means the target is in a blind zone. Choose the field path that keeps the badge green longest.</p>
+  </details>
 </section>
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <p>Hornet Sentinel v1.1 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
+  <p>Hornet Sentinel v1.2 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
   <p style="margin-top:6px;font-size:12px;opacity:.7">
     <a href="https://github.com/Ph4ky/rfmap" style="color:inherit">github.com/Ph4ky/rfmap</a>
     &nbsp;·&nbsp;
