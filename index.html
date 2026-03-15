@@ -29,6 +29,7 @@
 <nav>
   <a href="#features">Features</a>
   <a href="#simulation">Simulation</a>
+  <a href="#reference">Reference</a>
   <a href="#setup">Setup</a>
   <a href="#api">API</a>
   <a href="#faq">FAQ</a>
@@ -220,6 +221,206 @@ Position error ≈ distance × tan(noise_angle)
   500 m  @  5° noise  →  ~44 m error
   2 km   @  5° noise  →  ~175 m error
   5 km   @ 10° noise  →  ~882 m error</div>
+</section>
+
+<!-- ── Feature Reference ─────────────────────────────────────────────────────── -->
+<section id="reference">
+  <h2>Feature Reference</h2>
+  <p class="section-intro">Complete reference for all controls, layers, modes and interactions.</p>
+
+  <!-- Map Layers -->
+  <details open>
+    <summary>Map Layers</summary>
+    <table>
+      <thead><tr><th>Layer</th><th>What it shows</th></tr></thead>
+      <tbody>
+        <tr><td>DOA Lines</td><td>Direction-of-arrival rays from each station. Dashed, colour-coded per station. Length auto-scales 30% past the farthest intersection.</td></tr>
+        <tr><td>Intersections</td><td>Crossing points of DOA line pairs — each is a position estimate. Confidence-weighted centroid + orange error polygon shown when ≥ 3 crossings.</td></tr>
+        <tr><td>Heatmap</td><td>Kernel-density map of intersection points. Reveals dwell areas even when individual crossings are noisy.</td></tr>
+        <tr><td>Trail</td><td>Faint historical DOA lines for the current time window — shows how bearings evolved.</td></tr>
+        <tr><td>Distances</td><td>Labelled lines between all station pairs (m / km). Useful for tactical spacing and baseline planning.</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Toolbar -->
+  <details>
+    <summary>Toolbar Controls</summary>
+    <table>
+      <thead><tr><th>Control</th><th>Values / Range</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Max Distance</td><td>10 – 1,000,000 m</td><td>Maximum DOA line length drawn on map.</td></tr>
+        <tr><td>Mode</td><td>Live / History</td><td>Live: auto-refresh every 4 s. History: manual date/time range query.</td></tr>
+        <tr><td>Time Window (Live)</td><td>10 s – 120 min</td><td>How far back live data is fetched.</td></tr>
+        <tr><td>Frequency Filter</td><td>All / 148.537 / 446.094 / Custom</td><td>Show only reports on the selected frequency.</td></tr>
+        <tr><td>Map Style</td><td>Dark · Light · Ortho · Swisstopo · SwissImage</td><td>Background tile layer. All cached locally for offline use.</td></tr>
+        <tr><td>Language</td><td>DE / EN / FR</td><td>UI language. Applied immediately via i18n attribute system.</td></tr>
+        <tr><td>⚙ Alle Stationen</td><td>—</td><td>Open global config modal — pushes settings to all stations at once.</td></tr>
+        <tr><td>⊕ Kalibrieren</td><td>—</td><td>Enter calibration mode (see Calibration section).</td></tr>
+        <tr><td>✥ Verschieben</td><td>—</td><td>Make station markers draggable to correct GPS position.</td></tr>
+        <tr><td>⬡ (mobile)</td><td>—</td><td>Toggle simulation mode — alternative to triple-click logo.</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Simulation -->
+  <details>
+    <summary>Simulation Controls (complete)</summary>
+    <p style="font-size:12px;opacity:.7;margin-bottom:10px">Activate: triple-click the logo (desktop) or tap ⬡ (mobile). No database writes — purely frontend.</p>
+    <table>
+      <thead><tr><th>Control</th><th>Range / Values</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>TX Power</td><td>0.1 nW – 50 W (nW / µW / mW / W)</td><td>Transmitter output. 0 = unknown — no range circle, stations always visible.</td></tr>
+        <tr><td>Environment Loss</td><td>Freifeld 0 dB · Offenes Gelände +10 dB · Suburban +20 dB · Urban/Wald +30 dB · Dicht bebaut +40 dB</td><td>Extra propagation loss added to FSPL. Stations beyond resulting range drop out.</td></tr>
+        <tr><td>Noise</td><td>0 – 30°</td><td>Angular DOA error per measurement. 5–10° = realistic field. 15–25° = heavy multipath.</td></tr>
+        <tr><td>Trails</td><td>0 – 12</td><td>Extra simulated rounds drawn as faint trail lines behind main DOA rays.</td></tr>
+        <tr><td>Animate</td><td>200 – 2000 ms / frame</td><td>Continuous re-render with fresh random noise. Predict polygon accumulates over frames.</td></tr>
+        <tr><td>+Pkt</td><td>—</td><td>Add current target marker position as next route waypoint.</td></tr>
+        <tr><td>↩</td><td>—</td><td>Remove last waypoint.</td></tr>
+        <tr><td>Speed</td><td>1 – 500 km/h</td><td>Target speed along route during animation.</td></tr>
+        <tr><td>✕ (route)</td><td>—</td><td>Clear entire route.</td></tr>
+        <tr><td>Optimierung</td><td>checkbox</td><td>Show GDOP quality badge + optimal station position suggestions + range circle.</td></tr>
+        <tr><td>✕ Beenden</td><td>—</td><td>Exit simulation mode, return to live view.</td></tr>
+      </tbody>
+    </table>
+    <table style="margin-top:12px">
+      <thead><tr><th>Simulation Visual</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Orange error polygon</td><td>Uncertainty area for the current frame — shrinks with better geometry / lower noise.</td></tr>
+        <tr><td>Green predict polygon</td><td>Accumulated centroid history (8–25 frames rolling window). Fades in after 8 frames, persists after animation stops.</td></tr>
+        <tr><td>GDOP badge</td><td>Gut ≥ 75% · Mittel ≥ 45% · Schlecht &lt; 45%. Updated every frame during animation.</td></tr>
+        <tr><td>Orange range circle</td><td>Maximum detection radius based on TX power + FSPL + environment loss.</td></tr>
+        <tr><td>Cyan dashed circle</td><td>Optimal station deployment radius for best GDOP.</td></tr>
+        <tr><td>Ghost markers (OPT 1…N)</td><td>Suggested optimal station positions for the current target location.</td></tr>
+        <tr><td>Route line</td><td>White dashed polyline through all waypoints with ∑ distance label.</td></tr>
+        <tr><td>Heatmap (sim)</td><td>Built once when animation starts — shows intersection density at target position.</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Station Management -->
+  <details>
+    <summary>Station Management</summary>
+    <table>
+      <thead><tr><th>Action</th><th>How</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Add station</td><td>+ button in station list</td><td>Register a new station by ID (and optional display name).</td></tr>
+        <tr><td>Delete station</td><td>✕ on station card</td><td>Remove station and all its data permanently.</td></tr>
+        <tr><td>Start / Stop DOA</td><td>▶ / ■ on station card</td><td>Send start/stop command to the KrakenSDR service on the station Pi.</td></tr>
+        <tr><td>Status</td><td>⟳ on station card</td><td>Poll current DOA service status.</td></tr>
+        <tr><td>Reboot / Power off</td><td>Buttons on station card</td><td>Remote reboot or shutdown of station hardware.</td></tr>
+        <tr><td>Position override</td><td>✥ Verschieben → drag marker</td><td>Manually correct station GPS coordinates. Saved server-side, applied to all DOA / triangulation calculations.</td></tr>
+        <tr><td>Click station name</td><td>Panel → station list</td><td>Center map on that station's position.</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Station Config -->
+  <details>
+    <summary>Station Config Modal</summary>
+    <table>
+      <thead><tr><th>Parameter</th><th>Range / Options</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">RECEIVER</td></tr>
+        <tr><td>Frequency</td><td>1 MHz – 6 GHz (Hz)</td><td>Centre frequency for KrakenSDR.</td></tr>
+        <tr><td>Gain</td><td>0 – 49.6 dB (29 steps)</td><td>RF front-end gain.</td></tr>
+        <tr><td>Sample Rate</td><td>1.024 / 1.536 / 2.048 / 2.4 / 2.88 / 3.2 MHz</td><td>ADC sample rate — determines usable bandwidth.</td></tr>
+        <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">DOA</td></tr>
+        <tr><td>Method</td><td>MUSIC · Bartlett · Capon · MEM · ROOT-MUSIC</td><td>DOA algorithm. MUSIC default — best resolution.</td></tr>
+        <tr><td>Array Type</td><td>UCA · ULA</td><td>Circular or linear antenna arrangement.</td></tr>
+        <tr><td>Antenna Spacing</td><td>0.1 – 2.0 λ</td><td>Element spacing in wavelengths.</td></tr>
+        <tr><td>Elements</td><td>2 – 8</td><td>Number of antenna elements.</td></tr>
+        <tr><td>Expected Sources</td><td>1 – 10</td><td>Expected number of simultaneous RF sources.</td></tr>
+        <tr><td>Azimuth Correction</td><td>–180° – +180°</td><td>Manual bearing offset to correct array orientation.</td></tr>
+        <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">FILTER & TIMING</td></tr>
+        <tr><td>Squelch</td><td>–120 – 0 dBm</td><td>Minimum signal level to report a bearing.</td></tr>
+        <tr><td>VFO Bandwidth</td><td>1 kHz – 2.4 MHz</td><td>Width of the virtual receiver window around centre frequency.</td></tr>
+        <tr><td>Update Interval</td><td>100 – 10,000 ms</td><td>How often the station sends new bearing data.</td></tr>
+        <tr><td>Burst Mode</td><td>on / off</td><td>Only transmit when signal detected — saves bandwidth for pulsed transmitters (e.g. 20 ms VHF telemetry tags).</td></tr>
+        <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">NETWORK / SSH</td></tr>
+        <tr><td>Position Override</td><td>lat / lon</td><td>Manual GPS coordinates if station has no GPS fix.</td></tr>
+        <tr><td>ZeroTier / VPN IP</td><td>172.x.x.x</td><td>Station network address for API and SSH access.</td></tr>
+        <tr><td>API Key</td><td>string</td><td>Authentication token for inbound bearing reports.</td></tr>
+        <tr><td>SSH User / Password</td><td>string</td><td>Credentials for script deployment via SSH.</td></tr>
+        <tr><td>DOA Service Name</td><td>default: krakensdr_doa</td><td>systemd service name controlled by start/stop commands.</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Frequency Advisor -->
+  <details>
+    <summary>Frequency Advisor</summary>
+    <p style="font-size:13px;opacity:.8;margin-bottom:10px">Built into the station config modal. Visualises the sampling band and detects known interferers.</p>
+    <table>
+      <thead><tr><th>Interferer</th><th>Frequency Range</th></tr></thead>
+      <tbody>
+        <tr><td>CH Pager (Swisscom)</td><td>147.3 – 147.7 MHz</td></tr>
+        <tr><td>TETRA / BOS</td><td>380 – 400 MHz</td></tr>
+        <tr><td>FM Broadcast</td><td>87.5 – 108 MHz</td></tr>
+        <tr><td>PMR446</td><td>446.0 – 446.2 MHz</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;opacity:.7;margin-top:8px">⚡ <strong>Auto-fix:</strong> selects the smallest compatible sample rate that keeps all detected interferers outside the sampling band. For CH 148.537 MHz → sample rate ≤ 1.024 MHz excludes CH pager band.</p>
+  </details>
+
+  <!-- Calibration -->
+  <details>
+    <summary>Azimuth Calibration</summary>
+    <div class="code-block">Workflow:
+1. Place a known transmitter at a fixed position
+2. Click ⊕ Kalibrieren → calibration panel appears
+3. Drag the calibration marker to the known TX position on the map
+4. Panel shows: Station · Expected bearing · Measured bearing · Delta · Proposed correction
+5. Review per-station deltas
+6. Click "Korrekturen übernehmen" → corrections saved server-side
+   → applied retroactively to all historical data at query time</div>
+    <p style="font-size:12px;opacity:.7;margin-top:8px">Correction is a bearing offset (°) applied at query time — no reprocessing of raw data needed. Per-station, survives restarts.</p>
+  </details>
+
+  <!-- Map Interactions -->
+  <details>
+    <summary>Interactions &amp; Shortcuts</summary>
+    <table>
+      <thead><tr><th>Interaction</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Triple-click logo</td><td>Toggle simulation mode</td></tr>
+        <tr><td>Click intersection marker</td><td>Center map on that intersection</td></tr>
+        <tr><td>Click station name (panel)</td><td>Center map on that station</td></tr>
+        <tr><td>Click DOA line</td><td>Show bearing report popup (station, bearing, confidence, timestamp)</td></tr>
+        <tr><td>Click intersection point</td><td>Show popup with lat/lon and contributing station pair</td></tr>
+        <tr><td>Drag station marker</td><td>(Move mode active) Override station GPS position</td></tr>
+        <tr><td>Drag sim target marker</td><td>Reposition simulated transmitter, clears predict polygon</td></tr>
+        <tr><td>☰ (mobile)</td><td>Open/close side panel</td></tr>
+      </tbody>
+    </table>
+  </details>
+
+  <!-- Station Colors -->
+  <details>
+    <summary>Station Colours &amp; Constants</summary>
+    <table>
+      <thead><tr><th>Station slot</th><th>Colour</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span style="display:inline-block;width:12px;height:12px;background:#58a6ff;border-radius:2px;vertical-align:middle;margin-right:6px"></span>#58a6ff — Blue</td></tr>
+        <tr><td>2</td><td><span style="display:inline-block;width:12px;height:12px;background:#f78166;border-radius:2px;vertical-align:middle;margin-right:6px"></span>#f78166 — Red-orange</td></tr>
+        <tr><td>3</td><td><span style="display:inline-block;width:12px;height:12px;background:#3fb950;border-radius:2px;vertical-align:middle;margin-right:6px"></span>#3fb950 — Green</td></tr>
+        <tr><td>4</td><td><span style="display:inline-block;width:12px;height:12px;background:#d2a8ff;border-radius:2px;vertical-align:middle;margin-right:6px"></span>#d2a8ff — Purple</td></tr>
+        <tr><td>5</td><td><span style="display:inline-block;width:12px;height:12px;background:#ffa657;border-radius:2px;vertical-align:middle;margin-right:6px"></span>#ffa657 — Orange-gold</td></tr>
+      </tbody>
+    </table>
+    <table style="margin-top:12px">
+      <thead><tr><th>Constant</th><th>Value</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Live refresh</td><td>4 s</td><td>Auto-refresh interval in live mode</td></tr>
+        <tr><td>Station timeout</td><td>120 s</td><td>Station shown as offline after no report for 2 min</td></tr>
+        <tr><td>Accum min</td><td>8 frames</td><td>Frames before predict polygon appears</td></tr>
+        <tr><td>Accum window</td><td>25 frames</td><td>Rolling centroid history for predict polygon</td></tr>
+        <tr><td>RX threshold (detect)</td><td>−110 dBm</td><td>Minimum received power to register a bearing</td></tr>
+        <tr><td>RX threshold (DOA quality)</td><td>−100 dBm</td><td>Minimum for SNR ≥ 10 dB (reliable DOA)</td></tr>
+      </tbody>
+    </table>
+  </details>
+
 </section>
 
 <!-- ── Setup ─────────────────────────────────────────────────────────────────── -->
