@@ -123,6 +123,24 @@
       <p>Responsive toolbar, off-canvas panel, full-screen config modal. Dedicated ⬡ button activates simulation on mobile where logo triple-tap isn't accessible.</p>
     </div>
 
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <h3>User Management</h3>
+      <p>Session-based authentication with three roles: <strong>admin</strong> (full access), <strong>operator</strong> (all station controls), <strong>viewer</strong> (read-only). Admin UI at <code>/admin</code> — create, delete and manage users. Default credentials set on first start.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">⏻</div>
+      <h3>Station Enable / Disable</h3>
+      <p>Toggle individual stations on/off without deleting them. Disabled stations are excluded from live DOA lines, triangulation and simulation. State persists in the database.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔘</div>
+      <h3>Hardware Shutdown Button</h3>
+      <p>GPIO 17 (Pin 11) shutdown button support for KrakenSDR Raspberry Pi stations. Deployed automatically alongside the config sync script. Hold 2 seconds → clean shutdown. Compatible with IMU on I2C (GPIO 3 / SDA intentionally avoided).</p>
+    </div>
+
   </div>
 </section>
 
@@ -309,7 +327,8 @@ Position error ≈ distance × tan(noise_angle)
         <tr><td>Start / Stop DOA</td><td>▶ / ■ on station card</td><td>Send start/stop command to the KrakenSDR service on the station Pi.</td></tr>
         <tr><td>Status</td><td>⟳ on station card</td><td>Poll current DOA service status.</td></tr>
         <tr><td>Reboot / Power off</td><td>Buttons on station card</td><td>Remote reboot or shutdown of station hardware.</td></tr>
-        <tr><td>Position override</td><td>✥ Verschieben → drag marker</td><td>Manually correct station GPS coordinates. Saved server-side, applied to all DOA / triangulation calculations.</td></tr>
+        <tr><td>Enable / Disable</td><td>● / ○ toggle on station card</td><td>Exclude station from live DOA, triangulation and simulation without deleting it.</td></tr>
+        <tr><td>Position override</td><td>✥ Verschieben → drag marker</td><td>Manually correct station GPS coordinates. Map updates immediately. 📍✕ button clears the override.</td></tr>
         <tr><td>Click station name</td><td>Panel → station list</td><td>Center map on that station's position.</td></tr>
       </tbody>
     </table>
@@ -322,8 +341,8 @@ Position error ≈ distance × tan(noise_angle)
       <thead><tr><th>Parameter</th><th>Range / Options</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">RECEIVER</td></tr>
-        <tr><td>Frequency</td><td>1 MHz – 6 GHz (Hz)</td><td>Centre frequency for KrakenSDR.</td></tr>
-        <tr><td>Gain</td><td>0 – 49.6 dB (29 steps)</td><td>RF front-end gain.</td></tr>
+        <tr><td>Frequency</td><td>1 – 6000 MHz</td><td>Centre frequency for KrakenSDR. Entered in MHz (e.g. 148.537).</td></tr>
+        <tr><td>Gain</td><td>0 – 49.6 dB (29 steps)</td><td>RF front-end gain. Default 43.9 dB for 200 µW wildlife telemetry tags.</td></tr>
         <tr><td>Sample Rate</td><td>1.024 / 1.536 / 2.048 / 2.4 / 2.88 / 3.2 MHz</td><td>ADC sample rate — determines usable bandwidth.</td></tr>
         <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">DOA</td></tr>
         <tr><td>Method</td><td>MUSIC · Bartlett · Capon · MEM · ROOT-MUSIC</td><td>DOA algorithm. MUSIC default — best resolution.</td></tr>
@@ -336,7 +355,9 @@ Position error ≈ distance × tan(noise_angle)
         <tr><td>Squelch</td><td>–120 – 0 dBm</td><td>Minimum signal level to report a bearing.</td></tr>
         <tr><td>VFO Bandwidth</td><td>1 kHz – 2.4 MHz</td><td>Width of the virtual receiver window around centre frequency.</td></tr>
         <tr><td>Update Interval</td><td>100 – 10,000 ms</td><td>How often the station sends new bearing data.</td></tr>
-        <tr><td>Burst Mode</td><td>on / off</td><td>Only transmit when signal detected — saves bandwidth for pulsed transmitters (e.g. 20 ms VHF telemetry tags).</td></tr>
+        <tr><td>Burst Mode</td><td>on / off</td><td>Only transmit when signal detected — saves bandwidth for pulsed transmitters (e.g. 20 ms VHF telemetry tags). Default on.</td></tr>
+        <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">TEMPLATE</td></tr>
+        <tr><td>⭐ Als Standard</td><td>—</td><td>Save current config as default template for new stations (excluding station IP). New stations auto-load this template when their config modal is first opened.</td></tr>
         <tr><td colspan="3" style="opacity:.6;font-size:11px;padding:6px 8px">NETWORK / SSH</td></tr>
         <tr><td>Position Override</td><td>lat / lon</td><td>Manual GPS coordinates if station has no GPS fix.</td></tr>
         <tr><td>ZeroTier / VPN IP</td><td>172.x.x.x</td><td>Station network address for API and SSH access.</td></tr>
@@ -504,6 +525,14 @@ Portal (Docker)
       <tr><td>POST</td><td>/api/station/:id/deploy</td><td>X-Api-Key</td><td>SSH-deploy config sync script</td></tr>
       <tr><td>POST</td><td>/api/station/:id/control</td><td>X-Api-Key</td><td>Start / stop / status DOA process</td></tr>
       <tr><td>DELETE</td><td>/api/station/:id</td><td>X-Api-Key</td><td>Delete station + all data</td></tr>
+      <tr><td>PATCH</td><td>/api/station/:id/enabled</td><td>X-Api-Key / Session</td><td>Enable or disable a station</td></tr>
+      <tr><td>POST</td><td>/api/station/:id/health</td><td>X-Api-Key</td><td>Report per-channel antenna health (CH0–CH4)</td></tr>
+      <tr><td>POST</td><td>/api/auth/login</td><td>—</td><td>Login (username + password → session cookie)</td></tr>
+      <tr><td>POST</td><td>/api/auth/logout</td><td>Session</td><td>Invalidate session</td></tr>
+      <tr><td>GET</td><td>/api/auth/me</td><td>Session</td><td>Current user info (id, username, role)</td></tr>
+      <tr><td>GET</td><td>/api/admin/users</td><td>admin</td><td>List all users</td></tr>
+      <tr><td>POST</td><td>/api/admin/users</td><td>admin</td><td>Create user (username, password, role)</td></tr>
+      <tr><td>DELETE</td><td>/api/admin/users/:id</td><td>admin</td><td>Delete user</td></tr>
     </tbody>
   </table>
 </section>
@@ -551,11 +580,37 @@ Portal (Docker)
     <summary>How does route simulation help with 2-station geometry?</summary>
     <p>With only 2 stations you get a single bearing intersection. Cut angle (and therefore position error) varies drastically depending on where the target is relative to the baseline. Use route simulation to walk candidate transmitter paths and watch the GDOP quality badge live — green means the geometry holds, red means the target is in a blind zone. Choose the field path that keeps the badge green longest.</p>
   </details>
+
+  <details>
+    <summary>Recommended parameters for 148 MHz wildlife telemetry (200 µW, 20 ms pulse)?</summary>
+    <p>These defaults are pre-configured for VHF telemetry tags (hornets, birds, small mammals):</p>
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Frequency</td><td>148.537 MHz</td><td>Standard CH wildlife telemetry band</td></tr>
+        <tr><td>Gain</td><td>43.9 dB</td><td>200 µW = −37 dBm — maximum gain needed</td></tr>
+        <tr><td>Squelch</td><td>−70 dBm</td><td>Trigger on pulse, reject noise floor</td></tr>
+        <tr><td>VFO Bandwidth</td><td>6250 Hz</td><td>Narrow channel — better SNR</td></tr>
+        <tr><td>Burst Mode</td><td>on</td><td>Process only during 20 ms pulse, not silence</td></tr>
+        <tr><td>Update Interval</td><td>500 ms</td><td>Pulse rate ~60 BPM = 1 pulse/s, 500 ms margin</td></tr>
+        <tr><td>Sample Rate</td><td>1.024 MHz</td><td>Excludes CH Pager band (147.3–147.5 MHz)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;opacity:.7;margin-top:8px">With 3 stations: localisation accuracy &lt; 15 m in open terrain.</p>
+  </details>
+
+  <details>
+    <summary>What user roles exist?</summary>
+    <p><strong>admin</strong> — full access including user management at <code>/admin</code>.<br>
+    <strong>operator</strong> — all station controls (config, deploy, start/stop, enable/disable). No user management.<br>
+    <strong>viewer</strong> — read-only access to the portal. All write operations blocked server-side.<br>
+    Default credentials on first start: <code>admin / admin</code> — change immediately via <code>/admin</code>.</p>
+  </details>
 </section>
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <p>Hornet Sentinel v1.2 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
+  <p>Hornet Sentinel v1.3 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
   <p style="margin-top:6px;font-size:12px;opacity:.7">
     <a href="https://github.com/Ph4ky/rfmap" style="color:inherit">github.com/Ph4ky/rfmap</a>
     &nbsp;·&nbsp;
