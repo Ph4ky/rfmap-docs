@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hornet Sentinel — RF Direction Finding C2</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
 </head>
 <body>
 
@@ -30,6 +32,7 @@
   <a href="#features">Features</a>
   <a href="#simulation">Simulation</a>
   <a href="#reference">Reference</a>
+  <a href="#architecture">Architecture</a>
   <a href="#setup">Setup</a>
   <a href="#api">API</a>
   <a href="#faq">FAQ</a>
@@ -442,6 +445,62 @@ Position error ≈ distance × tan(noise_angle)
     </table>
   </details>
 
+</section>
+
+<!-- ── Architecture ──────────────────────────────────────────────────────────── -->
+<section id="architecture">
+  <h2>System Architecture</h2>
+  <p class="section-intro">Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal.</p>
+
+  <div class="mermaid">
+graph TD
+    subgraph FIELD["Field Site (Edge)"]
+        A[Antenna Array 5 elements] -->|IQ Data| B(KrakenSDR + Raspberry Pi)
+        B -->|FFT / MUSIC algorithm| C{Bearing Vector JSON}
+    end
+
+    subgraph TRANSPORT["Secure Transport"]
+        C -->|HTTPS + API Key| D[ZeroTier VPN / Internet]
+    end
+
+    subgraph CLOUD["Cloud Infrastructure"]
+        D --> E[Hetzner VM · Ubuntu · Docker]
+        E --> F[(PostgreSQL)]
+        E --> G[Portal · hornetsentinel.hak-digital.ch]
+        H[Cloudflare Pages] --> I[Landing · hornetsentinel.ch]
+    end
+
+    style B fill:#f96,stroke:#333,stroke-width:2px
+    style G fill:#2ecc71,stroke:#333,stroke-width:2px
+    style D fill:#3498db,stroke:#333,stroke-width:1px
+    style H fill:#f38020,stroke:#333,stroke-width:1px
+  </div>
+
+  <p style="font-size:12px;opacity:.6;text-align:center;margin-top:6px">
+    The KrakenSDR Pi processes raw IQ data locally — only the resulting bearing vector (a few bytes of JSON) is transmitted. This allows operation over LTE with minimal bandwidth.
+  </p>
+
+  <h3 style="margin-top:32px">Deployment Scenarios</h3>
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>Hardware</th><th>Network</th><th>Best For</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Tactical / Mobile</strong></td><td>KrakenSDR + RPi (single unit)</td><td>Local WiFi / Hotspot</td><td>Offline field work, direct tracking</td></tr>
+      <tr><td><strong>Distributed Network</strong></td><td>Multiple KrakenSDR sensors</td><td>LTE / ZeroTier VPN</td><td>Multi-station triangulation, large area coverage</td></tr>
+      <tr><td><strong>Sovereign / On-Prem</strong></td><td>Local server or VM</td><td>Private LAN / WireGuard</td><td>Air-gapped or high-security environments</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:24px">Why Edge Processing?</h3>
+  <div class="code-block">Raw IQ stream  →  ~50–200 MB/s   (unusable over LTE)
+Bearing vector →  ~0.5 KB/report  (trivial over LTE / satellite)
+
+KrakenSDR Pi processes locally:
+  1. FFT — frequency domain conversion
+  2. MUSIC algorithm — direction-of-arrival estimation
+  3. GPS timestamp + heading fusion
+  → POST /save.php  {station_id, lat, lon, doa_angle, confidence, ...}</div>
 </section>
 
 <!-- ── Setup ─────────────────────────────────────────────────────────────────── -->
