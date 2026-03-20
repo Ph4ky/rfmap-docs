@@ -566,6 +566,9 @@ Portal (Docker)
 <!-- ── API ───────────────────────────────────────────────────────────────────── -->
 <section id="api">
   <h2>API Reference</h2>
+  <p style="font-size:13px;opacity:.8;margin-bottom:16px">
+    <strong>Rate limiting:</strong> <code>POST /api/auth/login</code> is limited to <strong>10 attempts per IP per 15 minutes</strong>. Exceeding the limit returns HTTP 429.
+  </p>
   <table>
     <thead>
       <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
