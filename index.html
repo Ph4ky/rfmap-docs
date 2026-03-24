@@ -692,48 +692,48 @@ Portal (Docker)
   <h2 data-i18n="faq.h2">FAQ</h2>
 
   <details>
-    <summary>Why does the error polygon change size when I move the target?</summary>
-    <p>Two geometric effects: <strong>cut angle (GDOP)</strong> — lines near-parallel to each other produce a huge, unstable intersection. And <strong>distance</strong> — same angular noise at 5 km = 5× larger position error than at 1 km. Optimal: stations surrounding the target with ~60–90° cut angles.</p>
+    <summary data-i18n="faq.q1">Warum ändert das Fehlerpolygon seine Grösse, wenn ich das Ziel verschiebe?</summary>
+    <p data-i18n="faq.a1">Zwei geometrische Effekte: <strong>Schnittwinkel (GDOP)</strong> — nahezu parallele Linien erzeugen einen riesigen, instabilen Schnittpunkt. Und <strong>Distanz</strong> — gleicher Winkelfehler bei 5 km = 5× grösserer Positionsfehler als bei 1 km. Optimal: Stationen umgeben das Ziel mit ~60–90° Schnittwinkeln.</p>
   </details>
 
   <details>
-    <summary>Why does a station disappear in simulation?</summary>
-    <p>The FSPL model computes received power. If it drops below −110 dBm (KrakenSDR sensitivity) the station «hears nothing». Increase TX power, reduce environment loss, or move station closer to target.</p>
+    <summary data-i18n="faq.q2">Warum verschwindet eine Station in der Simulation?</summary>
+    <p data-i18n="faq.a2">Das FSPL-Modell berechnet die empfangene Leistung. Sinkt sie unter −110 dBm (KrakenSDR-Empfindlichkeit), «hört» die Station nichts. TX-Leistung erhöhen, Umgebungsverlust reduzieren oder Station näher ans Ziel setzen.</p>
   </details>
 
   <details>
-    <summary>What is TX Power = 0?</summary>
-    <p>Setting TX to 0 means «unknown». The GDOP optimizer runs without a range constraint (no orange range circle). The simulation itself uses 1000 mW internally so stations remain visible.</p>
+    <summary data-i18n="faq.q3">Was bedeutet TX-Leistung = 0?</summary>
+    <p data-i18n="faq.a3">TX = 0 bedeutet «unbekannt». Der GDOP-Optimierer läuft ohne Reichweitenbeschränkung (kein oranger Reichweitenkreis). Die Simulation selbst verwendet intern 1000 mW, damit Stationen sichtbar bleiben.</p>
   </details>
 
   <details>
-    <summary>What does the Frequency Advisor do?</summary>
-    <p>It checks whether known interferers (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) fall into the sampling band. It then recommends the smallest KrakenSDR-compatible sample rate that excludes all detected interferers. For CH 148.537 MHz: sample rate ≤ 1.024 MHz keeps CH pagers out of band.</p>
+    <summary data-i18n="faq.q4">Was macht der Frequenzberater?</summary>
+    <p data-i18n="faq.a4">Er prüft, ob bekannte Störer (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) ins Abtastband fallen. Dann empfiehlt er die kleinste KrakenSDR-kompatible Abtastrate, die alle erkannten Störer ausschliesst. Für CH 148.537 MHz: Abtastrate ≤ 1.024 MHz hält CH-Pager ausserhalb des Bandes.</p>
   </details>
 
   <details>
-    <summary>Does the system work offline?</summary>
-    <p>Yes. All map tiles are cached locally (<code>/app/tile-cache/</code>). The system is designed for disconnected operations.</p>
+    <summary data-i18n="faq.q5">Funktioniert das System offline?</summary>
+    <p data-i18n="faq.a5">Ja. Alle Kartenkacheln werden lokal zwischengespeichert (<code>/app/tile-cache/</code>). Das System ist für den Betrieb ohne Internetverbindung ausgelegt.</p>
   </details>
 
   <details>
-    <summary>How many stations are recommended?</summary>
-    <p>Minimum 2 (1 intersection). Optimal 3 (3 intersections, error triangle visible). Ideal 4+ (6+ intersections, robust even if one station fails).</p>
+    <summary data-i18n="faq.q6">Wie viele Stationen werden empfohlen?</summary>
+    <p data-i18n="faq.a6">Minimum 2 (1 Schnittpunkt). Optimal 3 (3 Schnittpunkte, Fehlerdreieck sichtbar). Ideal 4+ (6+ Schnittpunkte, robust auch bei Ausfall einer Station).</p>
   </details>
 
   <details>
-    <summary>How does azimuth calibration work?</summary>
-    <p>Place a test transmitter at a known position, drag the calibration marker to that position, and click «Korrekturen übernehmen». The correction is applied server-side at query time — retroactively fixes all historical data without reprocessing.</p>
+    <summary data-i18n="faq.q7">Wie funktioniert die Azimuth-Kalibrierung?</summary>
+    <p data-i18n="faq.a7">Einen Testsender an bekannter Position aufstellen, den Kalibrierungsmarker dorthin ziehen und «Korrekturen übernehmen» klicken. Die Korrektur wird serverseitig zur Abfragezeit angewendet — behebt rückwirkend alle historischen Daten ohne Neuverarbeitung.</p>
   </details>
 
   <details>
-    <summary>How does route simulation help with 2-station geometry?</summary>
-    <p>With only 2 stations you get a single bearing intersection. Cut angle (and therefore position error) varies drastically depending on where the target is relative to the baseline. Use route simulation to walk candidate transmitter paths and watch the GDOP quality badge live — green means the geometry holds, red means the target is in a blind zone. Choose the field path that keeps the badge green longest.</p>
+    <summary data-i18n="faq.q8">Wie hilft die Routen-Simulation bei 2-Stationen-Geometrie?</summary>
+    <p data-i18n="faq.a8">Mit nur 2 Stationen erhält man einen einzigen Peilungsschnittpunkt. Der Schnittwinkel variiert stark je nach Zielposition relativ zur Basislinie. Mit der Routen-Simulation Senderpfade abgehen und das GDOP-Qualitätsabzeichen live beobachten — Grün = gute Geometrie, Rot = tote Zone. Den Pfad wählen, der das Abzeichen am längsten grün hält.</p>
   </details>
 
   <details>
-    <summary>Recommended parameters for 148 MHz wildlife telemetry (200 µW, 20 ms pulse)?</summary>
-    <p>These defaults are pre-configured for VHF telemetry tags (hornets, birds, small mammals):</p>
+    <summary data-i18n="faq.q9">Empfohlene Parameter für 148-MHz-Wildtier-Telemetrie (200 µW, 20 ms Puls)?</summary>
+    <p data-i18n="faq.a9">Diese Standardwerte sind für VHF-Telemetrie-Tags (Hornissen, Vögel, Kleinsäuger) vorkonfiguriert:</p>
     <table>
       <thead><tr><th>Parameter</th><th>Value</th><th>Reason</th></tr></thead>
       <tbody>
@@ -746,15 +746,15 @@ Portal (Docker)
         <tr><td>Sample Rate</td><td>1.024 MHz</td><td>Excludes CH Pager band (147.3–147.5 MHz)</td></tr>
       </tbody>
     </table>
-    <p style="font-size:12px;opacity:.7;margin-top:8px">With 3 stations: localisation accuracy &lt; 15 m in open terrain.</p>
+    <p style="font-size:12px;opacity:.7;margin-top:8px" data-i18n="faq.a9b">Mit 3 Stationen: Ortungsgenauigkeit &lt; 15 m im offenen Gelände.</p>
   </details>
 
   <details>
-    <summary>What user roles exist?</summary>
-    <p><strong>admin</strong> — full access including user management at <code>/admin</code>.<br>
-    <strong>operator</strong> — all station controls (config, deploy, start/stop, enable/disable). No user management.<br>
-    <strong>viewer</strong> — read-only access to the portal. All write operations blocked server-side.<br>
-    Default credentials on first start: <code>admin / admin</code> — change immediately via <code>/admin</code>.</p>
+    <summary data-i18n="faq.q10">Welche Benutzerrollen gibt es?</summary>
+    <p data-i18n="faq.a10"><strong>admin</strong> — Vollzugriff inklusive Benutzerverwaltung unter <code>/admin</code>.<br>
+    <strong>operator</strong> — alle Stationssteuerungen (Konfiguration, Deploy, Start/Stop, Aktivierung). Keine Benutzerverwaltung.<br>
+    <strong>viewer</strong> — Nur-Lese-Zugriff auf das Portal. Alle Schreibvorgänge serverseitig blockiert.<br>
+    Standardanmeldedaten beim ersten Start: <code>admin / admin</code> — sofort über <code>/admin</code> ändern.</p>
   </details>
 </section>
 
@@ -824,6 +824,27 @@ const T = {
     'api.h2': 'API-Referenz',
     'faq.h2': 'FAQ',
     'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)',
+    'faq.q1': 'Warum ändert das Fehlerpolygon seine Grösse, wenn ich das Ziel verschiebe?',
+    'faq.a1': 'Zwei geometrische Effekte: <strong>Schnittwinkel (GDOP)</strong> — nahezu parallele Linien erzeugen einen riesigen, instabilen Schnittpunkt. Und <strong>Distanz</strong> — gleicher Winkelfehler bei 5 km = 5× grösserer Positionsfehler als bei 1 km. Optimal: Stationen umgeben das Ziel mit ~60–90° Schnittwinkeln.',
+    'faq.q2': 'Warum verschwindet eine Station in der Simulation?',
+    'faq.a2': 'Das FSPL-Modell berechnet die empfangene Leistung. Sinkt sie unter −110 dBm (KrakenSDR-Empfindlichkeit), «hört» die Station nichts. TX-Leistung erhöhen, Umgebungsverlust reduzieren oder Station näher ans Ziel setzen.',
+    'faq.q3': 'Was bedeutet TX-Leistung = 0?',
+    'faq.a3': 'TX = 0 bedeutet «unbekannt». Der GDOP-Optimierer läuft ohne Reichweitenbeschränkung (kein oranger Reichweitenkreis). Die Simulation selbst verwendet intern 1000 mW, damit Stationen sichtbar bleiben.',
+    'faq.q4': 'Was macht der Frequenzberater?',
+    'faq.a4': 'Er prüft, ob bekannte Störer (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) ins Abtastband fallen. Dann empfiehlt er die kleinste KrakenSDR-kompatible Abtastrate, die alle erkannten Störer ausschliesst. Für CH 148.537 MHz: Abtastrate ≤ 1.024 MHz hält CH-Pager ausserhalb des Bandes.',
+    'faq.q5': 'Funktioniert das System offline?',
+    'faq.a5': 'Ja. Alle Kartenkacheln werden lokal zwischengespeichert (<code>/app/tile-cache/</code>). Das System ist für den Betrieb ohne Internetverbindung ausgelegt.',
+    'faq.q6': 'Wie viele Stationen werden empfohlen?',
+    'faq.a6': 'Minimum 2 (1 Schnittpunkt). Optimal 3 (3 Schnittpunkte, Fehlerdreieck sichtbar). Ideal 4+ (6+ Schnittpunkte, robust auch bei Ausfall einer Station).',
+    'faq.q7': 'Wie funktioniert die Azimuth-Kalibrierung?',
+    'faq.a7': 'Einen Testsender an bekannter Position aufstellen, den Kalibrierungsmarker dorthin ziehen und «Korrekturen übernehmen» klicken. Die Korrektur wird serverseitig zur Abfragezeit angewendet — behebt rückwirkend alle historischen Daten ohne Neuverarbeitung.',
+    'faq.q8': 'Wie hilft die Routen-Simulation bei 2-Stationen-Geometrie?',
+    'faq.a8': 'Mit nur 2 Stationen erhält man einen einzigen Peilungsschnittpunkt. Der Schnittwinkel variiert stark je nach Zielposition relativ zur Basislinie. Mit der Routen-Simulation Senderpfade abgehen und das GDOP-Qualitätsabzeichen live beobachten — Grün = gute Geometrie, Rot = tote Zone. Den Pfad wählen, der das Abzeichen am längsten grün hält.',
+    'faq.q9': 'Empfohlene Parameter für 148-MHz-Wildtier-Telemetrie (200 µW, 20 ms Puls)?',
+    'faq.a9': 'Diese Standardwerte sind für VHF-Telemetrie-Tags (Hornissen, Vögel, Kleinsäuger) vorkonfiguriert:',
+    'faq.a9b': 'Mit 3 Stationen: Ortungsgenauigkeit &lt; 15 m im offenen Gelände.',
+    'faq.q10': 'Welche Benutzerrollen gibt es?',
+    'faq.a10': '<strong>admin</strong> — Vollzugriff inklusive Benutzerverwaltung unter <code>/admin</code>.<br><strong>operator</strong> — alle Stationssteuerungen (Konfiguration, Deploy, Start/Stop, Aktivierung). Keine Benutzerverwaltung.<br><strong>viewer</strong> — Nur-Lese-Zugriff auf das Portal. Alle Schreibvorgänge serverseitig blockiert.<br>Standardanmeldedaten beim ersten Start: <code>admin / admin</code> — sofort über <code>/admin</code> ändern.',
   },
   en: {
     'hero.tagline': 'Sovereign RF Direction Finding &amp; Triangulation',
@@ -879,6 +900,27 @@ const T = {
     'api.h2': 'API Reference',
     'faq.h2': 'FAQ',
     'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)',
+    'faq.q1': 'Why does the error polygon change size when I move the target?',
+    'faq.a1': 'Two geometric effects: <strong>cut angle (GDOP)</strong> — lines near-parallel to each other produce a huge, unstable intersection. And <strong>distance</strong> — same angular noise at 5 km = 5× larger position error than at 1 km. Optimal: stations surrounding the target with ~60–90° cut angles.',
+    'faq.q2': 'Why does a station disappear in simulation?',
+    'faq.a2': 'The FSPL model computes received power. If it drops below −110 dBm (KrakenSDR sensitivity) the station «hears nothing». Increase TX power, reduce environment loss, or move station closer to target.',
+    'faq.q3': 'What is TX Power = 0?',
+    'faq.a3': 'Setting TX to 0 means «unknown». The GDOP optimizer runs without a range constraint (no orange range circle). The simulation itself uses 1000 mW internally so stations remain visible.',
+    'faq.q4': 'What does the Frequency Advisor do?',
+    'faq.a4': 'It checks whether known interferers (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) fall into the sampling band. It then recommends the smallest KrakenSDR-compatible sample rate that excludes all detected interferers. For CH 148.537 MHz: sample rate ≤ 1.024 MHz keeps CH pagers out of band.',
+    'faq.q5': 'Does the system work offline?',
+    'faq.a5': 'Yes. All map tiles are cached locally (<code>/app/tile-cache/</code>). The system is designed for disconnected operations.',
+    'faq.q6': 'How many stations are recommended?',
+    'faq.a6': 'Minimum 2 (1 intersection). Optimal 3 (3 intersections, error triangle visible). Ideal 4+ (6+ intersections, robust even if one station fails).',
+    'faq.q7': 'How does azimuth calibration work?',
+    'faq.a7': 'Place a test transmitter at a known position, drag the calibration marker to that position, and click «Korrekturen übernehmen». The correction is applied server-side at query time — retroactively fixes all historical data without reprocessing.',
+    'faq.q8': 'How does route simulation help with 2-station geometry?',
+    'faq.a8': 'With only 2 stations you get a single bearing intersection. Cut angle (and therefore position error) varies drastically depending on where the target is relative to the baseline. Use route simulation to walk candidate transmitter paths and watch the GDOP quality badge live — green means the geometry holds, red means blind zone. Choose the field path that keeps the badge green longest.',
+    'faq.q9': 'Recommended parameters for 148 MHz wildlife telemetry (200 µW, 20 ms pulse)?',
+    'faq.a9': 'These defaults are pre-configured for VHF telemetry tags (hornets, birds, small mammals):',
+    'faq.a9b': 'With 3 stations: localisation accuracy &lt; 15 m in open terrain.',
+    'faq.q10': 'What user roles exist?',
+    'faq.a10': '<strong>admin</strong> — full access including user management at <code>/admin</code>.<br><strong>operator</strong> — all station controls (config, deploy, start/stop, enable/disable). No user management.<br><strong>viewer</strong> — read-only access to the portal. All write operations blocked server-side.<br>Default credentials on first start: <code>admin / admin</code> — change immediately via <code>/admin</code>.',
   },
   fr: {
     'hero.tagline': 'Radiogoniométrie RF souveraine &amp; Triangulation',
@@ -934,6 +976,27 @@ const T = {
     'api.h2': 'Référence API',
     'faq.h2': 'FAQ',
     'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Développé par Patrick Hak (HB9HDH)',
+    'faq.q1': 'Pourquoi le polygone d\'erreur change-t-il de taille quand je déplace la cible ?',
+    'faq.a1': 'Deux effets géométriques : <strong>angle de coupe (GDOP)</strong> — des lignes quasi-parallèles produisent une intersection énorme et instable. Et la <strong>distance</strong> — le même bruit angulaire à 5 km = 5× plus grande erreur de position qu\'à 1 km. Optimal : stations encerclant la cible avec des angles de coupe de ~60–90°.',
+    'faq.q2': 'Pourquoi une station disparaît-elle en simulation ?',
+    'faq.a2': 'Le modèle FSPL calcule la puissance reçue. Si elle descend sous −110 dBm (sensibilité KrakenSDR), la station «n\'entend rien». Augmenter la puissance TX, réduire la perte de propagation ou rapprocher la station de la cible.',
+    'faq.q3': 'Que signifie Puissance TX = 0 ?',
+    'faq.a3': 'TX = 0 signifie «inconnu». L\'optimiseur GDOP fonctionne sans contrainte de portée (pas de cercle de portée orange). La simulation utilise 1000 mW en interne pour que les stations restent visibles.',
+    'faq.q4': 'Que fait le Conseiller de fréquence ?',
+    'faq.a4': 'Il vérifie si des interféreurs connus (CH Pager 147.3–147.7 MHz, TETRA, BOS, FM) tombent dans la bande d\'échantillonnage. Il recommande ensuite le taux d\'échantillonnage le plus petit qui exclut tous les interféreurs détectés. Pour CH 148.537 MHz : taux ≤ 1.024 MHz maintient les pagers CH hors bande.',
+    'faq.q5': 'Le système fonctionne-t-il hors ligne ?',
+    'faq.a5': 'Oui. Toutes les tuiles de carte sont mises en cache localement (<code>/app/tile-cache/</code>). Le système est conçu pour fonctionner sans connexion Internet.',
+    'faq.q6': 'Combien de stations sont recommandées ?',
+    'faq.a6': 'Minimum 2 (1 intersection). Optimal 3 (3 intersections, triangle d\'erreur visible). Idéal 4+ (6+ intersections, robuste même en cas de panne d\'une station).',
+    'faq.q7': 'Comment fonctionne la calibration azimutale ?',
+    'faq.a7': 'Placer un émetteur de test à une position connue, faire glisser le marqueur de calibration sur cette position et cliquer sur «Korrekturen übernehmen». La correction est appliquée côté serveur au moment de la requête — corrige rétroactivement toutes les données historiques sans retraitement.',
+    'faq.q8': 'Comment la simulation de route aide-t-elle avec la géométrie à 2 stations ?',
+    'faq.a8': 'Avec seulement 2 stations, on obtient une seule intersection de relèvement. L\'angle de coupe varie fortement selon la position de la cible par rapport à la ligne de base. Utilisez la simulation de route pour parcourir les chemins candidats et observer le badge GDOP en temps réel — vert = bonne géométrie, rouge = zone aveugle. Choisir le chemin qui maintient le badge vert le plus longtemps.',
+    'faq.q9': 'Paramètres recommandés pour la télémétrie faune 148 MHz (200 µW, impulsion 20 ms) ?',
+    'faq.a9': 'Ces valeurs sont préconfigurées pour les balises VHF (frelons, oiseaux, petits mammifères) :',
+    'faq.a9b': 'Avec 3 stations : précision de localisation &lt; 15 m en terrain ouvert.',
+    'faq.q10': 'Quels rôles utilisateur existent ?',
+    'faq.a10': '<strong>admin</strong> — accès complet incluant la gestion des utilisateurs sur <code>/admin</code>.<br><strong>operator</strong> — tous les contrôles de station (config, déploiement, démarrage/arrêt, activation). Pas de gestion des utilisateurs.<br><strong>viewer</strong> — accès en lecture seule au portail. Toutes les opérations d\'écriture bloquées côté serveur.<br>Identifiants par défaut au premier démarrage : <code>admin / admin</code> — à changer immédiatement via <code>/admin</code>.',
   }
 };
 
