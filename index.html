@@ -465,28 +465,38 @@ Position error ≈ distance × tan(noise_angle)
 <!-- ── Architecture ──────────────────────────────────────────────────────────── -->
 <section id="architecture">
   <h2 data-i18n="arch.h2">Systemarchitektur</h2>
-  <p class="section-intro" data-i18n="arch.intro">Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Das Backend läuft auf dem eigenen Server (On-Premise) oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.</p>
+  <p class="section-intro" data-i18n="arch.intro">Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Der Kanal ist <strong>bidirektional</strong>: Konfigurationsänderungen und Steuerbefehle werden vom Portal zurück an den Edge-Node gepusht. Das Backend läuft On-Premise oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.</p>
 
   <div class="mermaid">
-graph TD
-    subgraph FIELD["Field Site (Edge)"]
-        A[Antenna Array 5 elements] -->|IQ Data| B(KrakenSDR + Raspberry Pi)
-        B -->|FFT / MUSIC algorithm| C{Bearing Vector JSON}
+graph LR
+    subgraph FIELD["Edge Node (KrakenSDR + RPi)"]
+        ANT[5-Element Antenna] -->|IQ stream| SDR(KrakenSDR DSP)
+        SDR -->|MUSIC / FFT| VEC[/Bearing Vector/]
+        GPS[GPS + Compass] --> VEC
     end
 
-    subgraph TRANSPORT["Secure Transport"]
-        C -->|HTTPS + API Key| D[ZeroTier VPN / Internet]
+    subgraph NET["Secure Transport — ZeroTier VPN"]
+        T((Encrypted Tunnel))
     end
 
-    subgraph BACKEND["Backend — Cloud or On-Prem"]
-        D --> E[Linux Server · Docker]
-        E --> F[(PostgreSQL)]
-        E --> G[Web Portal]
+    subgraph PORTAL["Portal — Docker"]
+        E[Node.js API + WebSocket :2096]
+        F[(PostgreSQL + PostGIS)]
+        G[Web Portal]
+        E <--> F
+        G <--> E
     end
 
-    style B fill:#f96,stroke:#333,stroke-width:2px
+    VEC -->|"DOA reports  POST :8080 / WS :2096"| T
+    SDR -->|"Health telemetry  POST every 15 s"| T
+    T --> E
+
+    E -->|"Config push  WebSocket :2096"| T
+    T -->|"Start / Stop / Reboot  SSH fallback"| SDR
+
+    style SDR fill:#f96,stroke:#333,stroke-width:2px
     style G fill:#2ecc71,stroke:#333,stroke-width:2px
-    style D fill:#3498db,stroke:#333,stroke-width:1px
+    style T fill:#3498db,stroke:#333,stroke-width:1px
     style E fill:#2ecc71,stroke:#333,stroke-width:1px
   </div>
 
@@ -760,7 +770,7 @@ const T = {
     'ref.h2': 'Funktionsreferenz',
     'ref.intro': 'Vollständige Referenz aller Steuerelemente, Ebenen, Modi und Interaktionen.',
     'arch.h2': 'Systemarchitektur',
-    'arch.intro': 'Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Das Backend läuft auf dem eigenen Server (On-Premise) oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.',
+    'arch.intro': 'Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Der Kanal ist <strong>bidirektional</strong>: Konfigurationsänderungen und Steuerbefehle werden vom Portal zurück an den Edge-Node gepusht. Das Backend läuft On-Premise oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.',
     'setup.h2': 'Schnellstart',
     'api.h2': 'API-Referenz',
     'faq.h2': 'FAQ',
@@ -815,7 +825,7 @@ const T = {
     'ref.h2': 'Feature Reference',
     'ref.intro': 'Complete reference for all controls, layers, modes and interactions.',
     'arch.h2': 'System Architecture',
-    'arch.intro': 'Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal. The backend runs on your own server (on-premise) or as a hosted service — same codebase, your choice.',
+    'arch.intro': 'Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal. The channel is <strong>bidirectional</strong>: config changes and control commands are pushed from the portal back to each edge node. The backend runs on-premise or as a hosted service — same codebase, your choice.',
     'setup.h2': 'Quick Setup',
     'api.h2': 'API Reference',
     'faq.h2': 'FAQ',
@@ -870,7 +880,7 @@ const T = {
     'ref.h2': 'Référence fonctionnelle',
     'ref.intro': 'Référence complète de tous les contrôles, couches, modes et interactions.',
     'arch.h2': 'Architecture système',
-    'arch.intro': 'Hornet Sentinel suit une philosophie d\'<strong>informatique en périphérie distribuée</strong> — le traitement du signal s\'effectue sur le capteur, seuls des vecteurs de relèvement compacts parviennent au portail. Le backend tourne sur votre propre serveur (sur site) ou en tant que service hébergé — même base de code, votre choix.',
+    'arch.intro': 'Hornet Sentinel suit une philosophie d\'<strong>informatique en périphérie distribuée</strong> — le traitement du signal s\'effectue sur le capteur, seuls des vecteurs de relèvement compacts parviennent au portail. Le canal est <strong>bidirectionnel</strong> : les modifications de configuration et les commandes de contrôle sont transmises du portail vers chaque nœud de terrain. Le backend tourne sur site ou en tant que service hébergé — même base de code, votre choix.',
     'setup.h2': 'Installation rapide',
     'api.h2': 'Référence API',
     'faq.h2': 'FAQ',
