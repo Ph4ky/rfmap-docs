@@ -124,6 +124,18 @@ h3 {
   max-width: 680px;
 }
 
+/* ── Feature groups ──────────────────────────────────────────────────────── */
+h3.feature-group {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin: 40px 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
 /* ── Cards ────────────────────────────────────────────────────────────────── */
 .card-grid {
   display: grid;
