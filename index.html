@@ -14,9 +14,8 @@
 <header>
   <div class="hero-inner">
     <div class="badge">⬡ HORNET<span>SENTINEL</span></div>
-    <p class="tagline">Sovereign RF Direction Finding &amp; Triangulation</p>
-    <p class="sub">RF C2 system for real-time signal source localisation using KrakenSDR hardware.<br>
-    Deploy on your own infrastructure — or use the hosted portal. Fully self-contained.</p>
+    <p class="tagline" data-i18n="hero.tagline">Sovereign RF Direction Finding &amp; Triangulation</p>
+    <p class="sub" data-i18n="hero.sub">RF C2-System zur Echtzeit-Ortung von Signalquellen mit KrakenSDR-Hardware.<br>Betrieb auf eigener Infrastruktur — oder als gehostetes Portal. Vollständig autark.</p>
     <div class="hero-tags">
       <span>KrakenSDR</span><span>DOA / TDOA</span><span>Leaflet.js</span>
       <span>PostgreSQL</span><span>Docker</span><span>VPN-agnostic</span>
@@ -29,13 +28,18 @@
 
 <!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
 <nav>
-  <a href="#features">Features</a>
-  <a href="#simulation">Simulation</a>
-  <a href="#reference">Reference</a>
-  <a href="#architecture">Architecture</a>
-  <a href="#setup">Setup</a>
-  <a href="#api">API</a>
-  <a href="#faq">FAQ</a>
+  <a href="#features" data-i18n="nav.features">Funktionen</a>
+  <a href="#simulation" data-i18n="nav.sim">Simulation</a>
+  <a href="#reference" data-i18n="nav.ref">Referenz</a>
+  <a href="#architecture" data-i18n="nav.arch">Architektur</a>
+  <a href="#setup" data-i18n="nav.setup">Einrichtung</a>
+  <a href="#api" data-i18n="nav.api">API</a>
+  <a href="#faq" data-i18n="nav.faq">FAQ</a>
+  <div class="lang-switcher">
+    <button class="lang-btn" id="btn-de" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
 </nav>
 
 <!-- ── Screenshot ───────────────────────────────────────────────────────────── -->
@@ -44,115 +48,115 @@
        alt="Hornet Sentinel — Simulation Mode"
        style="width:100%;max-width:960px;display:block;margin:0 auto;border-radius:8px;
               box-shadow:0 4px 32px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.08)">
-  <p style="text-align:center;font-size:12px;opacity:.5;margin-top:10px">
-    Simulation mode — DOA lines, orange error polygon (single frame), green predict polygon (accumulated)
+  <p data-i18n="screenshot.cap" style="text-align:center;font-size:12px;opacity:.5;margin-top:10px">
+    Simulationsmodus — DOA-Linien, oranges Fehlerpolygon (Einzelbild), grünes Prognosepolygon (kumuliert)
   </p>
 </section>
 
 <!-- ── Features ─────────────────────────────────────────────────────────────── -->
 <section id="features">
-  <h2>Hornet Sentinel v1.4 – Funktionsübersicht</h2>
+  <h2 data-i18n="features.h2">Hornet Sentinel v1.4 – Funktionsübersicht</h2>
 
-  <h3 class="feature-group">Zentrales Lagezentrum &amp; Kartenverwaltung</h3>
+  <h3 class="feature-group" data-i18n="features.g1">Zentrales Lagezentrum &amp; Kartenverwaltung</h3>
   <div class="card-grid">
 
     <div class="card">
       <div class="card-icon">🗺️</div>
-      <h3>Geoinformations-System</h3>
-      <p>Einbindung offizieller Schweizer Kartendienste (Swisstopo, SwissImage, Orthofoto) für präzise räumliche Orientierung — ergänzt durch Dark- und Light-Basiskarten.</p>
+      <h3 data-i18n="f.c1.h">Geoinformations-System</h3>
+      <p data-i18n="f.c1.p">Einbindung offizieller Schweizer Kartendienste (Swisstopo, SwissImage, Orthofoto) für präzise räumliche Orientierung — ergänzt durch Dark- und Light-Basiskarten.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🌗</div>
-      <h3>Dark- &amp; Light-Modus</h3>
-      <p>Vollständiger Dark- und Light-Modus für optimale Ablesbarkeit bei unterschiedlichen Lichtverhältnissen im Feld.</p>
+      <h3 data-i18n="f.c2.h">Dark- &amp; Light-Modus</h3>
+      <p data-i18n="f.c2.p">Vollständiger Dark- und Light-Modus für optimale Ablesbarkeit bei unterschiedlichen Lichtverhältnissen im Feld.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🌐</div>
-      <h3>Mehrsprachigkeit</h3>
-      <p>Vollständige Unterstützung in Deutsch und Französisch (DE / FR). Sprachpräferenz wird lokal gespeichert.</p>
+      <h3 data-i18n="f.c3.h">Mehrsprachigkeit</h3>
+      <p data-i18n="f.c3.p">Vollständige Unterstützung in Deutsch, Englisch und Französisch (DE / EN / FR). Sprachpräferenz wird lokal gespeichert.</p>
     </div>
 
   </div>
 
-  <h3 class="feature-group">Sensor-Management &amp; Signalerfassung</h3>
+  <h3 class="feature-group" data-i18n="features.g2">Sensor-Management &amp; Signalerfassung</h3>
   <div class="card-grid">
 
     <div class="card">
       <div class="card-icon">📡</div>
-      <h3>Fernverwaltung der Stationen</h3>
-      <p>Zentrale Steuerung und Überwachung entfernter Messeinheiten inklusive Betriebszustand, Live-Peildaten und Hardware-Telemetrie.</p>
+      <h3 data-i18n="f.c4.h">Fernverwaltung der Stationen</h3>
+      <p data-i18n="f.c4.p">Zentrale Steuerung und Überwachung entfernter Messeinheiten inklusive Betriebszustand, Live-Peildaten und Hardware-Telemetrie.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🎯</div>
-      <h3>Präzisions-Peilverfahren</h3>
-      <p>Implementierung verschiedener mathematischer Verfahren zur genauen Richtungsbestimmung (u.a. MUSIC, Bartlett, Capon). Triangulation aus mehreren Stationen mit Konfidenz-gewichtetem Schätzwert.</p>
+      <h3 data-i18n="f.c5.h">Präzisions-Peilverfahren</h3>
+      <p data-i18n="f.c5.p">Implementierung verschiedener mathematischer Verfahren zur genauen Richtungsbestimmung (u.a. MUSIC, Bartlett, Capon). Triangulation aus mehreren Stationen mit Konfidenz-gewichtetem Schätzwert.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">📶</div>
-      <h3>Mehrkanal-Überwachung</h3>
-      <p>Gleichzeitige Erfassung mehrerer Frequenzen zur Beobachtung komplexer Signalsituationen. Farbcodierung pro Frequenzquelle für schnelle visuelle Zuordnung.</p>
+      <h3 data-i18n="f.c6.h">Mehrkanal-Überwachung</h3>
+      <p data-i18n="f.c6.p">Gleichzeitige Erfassung mehrerer Frequenzen zur Beobachtung komplexer Signalsituationen. Farbcodierung pro Frequenzquelle für schnelle visuelle Zuordnung.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🧭</div>
-      <h3>Referenz-Kalibrierung</h3>
-      <p>Werkzeuge zum Abgleich von Messpunkten über einen bekannten Referenzsender. Korrekturen werden rückwirkend auf alle historischen Daten angewendet.</p>
+      <h3 data-i18n="f.c7.h">Referenz-Kalibrierung</h3>
+      <p data-i18n="f.c7.p">Werkzeuge zum Abgleich von Messpunkten über einen bekannten Referenzsender. Korrekturen werden rückwirkend auf alle historischen Daten angewendet.</p>
     </div>
 
   </div>
 
-  <h3 class="feature-group">Einsatzplanung &amp; Analyse</h3>
+  <h3 class="feature-group" data-i18n="features.g3">Einsatzplanung &amp; Analyse</h3>
   <div class="card-grid">
 
     <div class="card">
       <div class="card-icon">📊</div>
-      <h3>Telemetrie- &amp; Signalanalyse</h3>
-      <p>Live-Visualisierung von Signalstärken, Pegel und Qualitätskennwerten zur Identifikation und Bewertung der erfassten Sender.</p>
+      <h3 data-i18n="f.c8.h">Telemetrie- &amp; Signalanalyse</h3>
+      <p data-i18n="f.c8.p">Live-Visualisierung von Signalstärken, Pegel und Qualitätskennwerten zur Identifikation und Bewertung der erfassten Sender.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">⬡</div>
-      <h3>Kampagnen-Planung</h3>
-      <p>Integriertes Modul zur Vorhersage der Funkreichweite, Simulation von Umgebungsverlusten und Optimierung der Stationsplatzierung im Gelände — ohne Datenbankschreibzugriff.</p>
+      <h3 data-i18n="f.c9.h">Kampagnen-Planung</h3>
+      <p data-i18n="f.c9.p">Integriertes Modul zur Vorhersage der Funkreichweite, Simulation von Umgebungsverlusten und Optimierung der Stationsplatzierung im Gelände — ohne Datenbankschreibzugriff.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🕐</div>
-      <h3>Verlaufs-Dokumentation</h3>
-      <p>Auswertung vergangener Zeiträume zur Rekonstruktion von Signalbewegungen und Trends. Flexible Zeitfensterauswahl (1/5/15/30 Min. oder benutzerdefinierter Bereich).</p>
+      <h3 data-i18n="f.c10.h">Verlaufs-Dokumentation</h3>
+      <p data-i18n="f.c10.p">Auswertung vergangener Zeiträume zur Rekonstruktion von Signalbewegungen und Trends. Flexible Zeitfensterauswahl (1/5/15/30 Min. oder benutzerdefinierter Bereich).</p>
     </div>
 
     <div class="card">
       <div class="card-icon">🔥</div>
-      <h3>Wahrscheinlichkeits-Karten</h3>
-      <p>Visualisierung von Aufenthaltsbereichen durch die Kombination mehrerer Peilvektoren. Heatmap zeigt Signalquell-Schwerpunkte auch bei verrauschten Einzelmessungen.</p>
+      <h3 data-i18n="f.c11.h">Wahrscheinlichkeits-Karten</h3>
+      <p data-i18n="f.c11.p">Visualisierung von Aufenthaltsbereichen durch die Kombination mehrerer Peilvektoren. Heatmap zeigt Signalquell-Schwerpunkte auch bei verrauschten Einzelmessungen.</p>
     </div>
 
   </div>
 
-  <h3 class="feature-group">Konnektivität &amp; System-Sicherheit</h3>
+  <h3 class="feature-group" data-i18n="features.g4">Konnektivität &amp; System-Sicherheit</h3>
   <div class="card-grid">
 
     <div class="card">
       <div class="card-icon">🔐</div>
-      <h3>Gesicherte Datenübertragung</h3>
-      <p>Unterstützung für verschlüsselte Verbindungen (HTTPS/TLS) und geschützte Netzwerk-Overlays. Rollenbasiertes Zugriffsmanagement (Admin / Operator / Viewer).</p>
+      <h3 data-i18n="f.c12.h">Gesicherte Datenübertragung</h3>
+      <p data-i18n="f.c12.p">Unterstützung für verschlüsselte Verbindungen (HTTPS/TLS) und geschützte Netzwerk-Overlays. Rollenbasiertes Zugriffsmanagement (Admin / Operator / Viewer).</p>
     </div>
 
     <div class="card">
       <div class="card-icon">⚙️</div>
-      <h3>Effiziente Bereitstellung</h3>
-      <p>Schnelle Fern-Installation und Aktualisierung der Sensor-Software auf den Zielgeräten — direkt aus dem Portal per SSH, ohne manuellen Zugriff vor Ort.</p>
+      <h3 data-i18n="f.c13.h">Effiziente Bereitstellung</h3>
+      <p data-i18n="f.c13.p">Schnelle Fern-Installation und Aktualisierung der Sensor-Software auf den Zielgeräten — direkt aus dem Portal per SSH, ohne manuellen Zugriff vor Ort.</p>
     </div>
 
     <div class="card">
       <div class="card-icon">📱</div>
-      <h3>Mobile Nutzung</h3>
-      <p>Optimierte Ansicht für den taktischen Zugriff über Smartphones und Tablets direkt vor Ort. Responsive Toolbar, Off-Canvas-Panel, vollbildfähiges Konfigurationsmenü.</p>
+      <h3 data-i18n="f.c14.h">Mobile Nutzung</h3>
+      <p data-i18n="f.c14.p">Optimierte Ansicht für den taktischen Zugriff über Smartphones und Tablets direkt vor Ort. Responsive Toolbar, Off-Canvas-Panel, vollbildfähiges Konfigurationsmenü.</p>
     </div>
 
   </div>
@@ -160,8 +164,8 @@
 
 <!-- ── Simulation ────────────────────────────────────────────────────────────── -->
 <section id="simulation">
-  <h2>Simulation Mode</h2>
-  <p class="section-intro">Hidden mission planning tool — no database writes, purely frontend. Activate with a triple-click on the logo (desktop) or the ⬡ button (mobile).</p>
+  <h2 data-i18n="sim.h2">Simulationsmodus</h2>
+  <p class="section-intro" data-i18n="sim.intro">Verstecktes Planungswerkzeug — keine Datenbankschreibzugriffe, rein frontend-seitig. Aktivierung: dreifacher Klick auf das Logo (Desktop) oder ⬡-Schaltfläche (mobil).</p>
 
   <div class="sim-params">
     <div class="param">
@@ -257,8 +261,8 @@ Position error ≈ distance × tan(noise_angle)
 
 <!-- ── Feature Reference ─────────────────────────────────────────────────────── -->
 <section id="reference">
-  <h2>Feature Reference</h2>
-  <p class="section-intro">Complete reference for all controls, layers, modes and interactions.</p>
+  <h2 data-i18n="ref.h2">Funktionsreferenz</h2>
+  <p class="section-intro" data-i18n="ref.intro">Vollständige Referenz aller Steuerelemente, Ebenen, Modi und Interaktionen.</p>
 
   <!-- Map Layers -->
   <details open>
@@ -460,8 +464,8 @@ Position error ≈ distance × tan(noise_angle)
 
 <!-- ── Architecture ──────────────────────────────────────────────────────────── -->
 <section id="architecture">
-  <h2>System Architecture</h2>
-  <p class="section-intro">Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal. The backend runs on your own server (on-premise) or as a hosted service — same codebase, your choice.</p>
+  <h2 data-i18n="arch.h2">Systemarchitektur</h2>
+  <p class="section-intro" data-i18n="arch.intro">Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Das Backend läuft auf dem eigenen Server (On-Premise) oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.</p>
 
   <div class="mermaid">
 graph TD
@@ -530,7 +534,7 @@ KrakenSDR Pi processes locally:
 
 <!-- ── Setup ─────────────────────────────────────────────────────────────────── -->
 <section id="setup">
-  <h2>Quick Setup</h2>
+  <h2 data-i18n="setup.h2">Schnellstart</h2>
 
   <div class="steps">
     <div class="step">
@@ -590,7 +594,7 @@ Portal (Docker)
 
 <!-- ── API ───────────────────────────────────────────────────────────────────── -->
 <section id="api">
-  <h2>API Reference</h2>
+  <h2 data-i18n="api.h2">API-Referenz</h2>
   <p style="font-size:13px;opacity:.8;margin-bottom:16px">
     <strong>Rate limiting:</strong> <code>POST /api/auth/login</code> is limited to <strong>10 attempts per IP per 15 minutes</strong>. Exceeding the limit returns HTTP 429.
   </p>
@@ -626,7 +630,7 @@ Portal (Docker)
 
 <!-- ── FAQ ───────────────────────────────────────────────────────────────────── -->
 <section id="faq">
-  <h2>FAQ</h2>
+  <h2 data-i18n="faq.h2">FAQ</h2>
 
   <details>
     <summary>Why does the error polygon change size when I move the target?</summary>
@@ -697,7 +701,7 @@ Portal (Docker)
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <p>Hornet Sentinel v1.3 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)</p>
+  <p data-i18n="footer.credit">Hornet Sentinel v1.4 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)</p>
   <p style="margin-top:6px;font-size:12px;opacity:.7">
     <a href="https://github.com/Ph4ky/rfmap" style="color:inherit">github.com/Ph4ky/rfmap</a>
     &nbsp;·&nbsp;
@@ -706,26 +710,207 @@ Portal (Docker)
 </footer>
 
 <script>
-  // Smooth scroll for nav links
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelector(a.getAttribute('href'))
-        .scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+const T = {
+  de: {
+    'hero.tagline': 'Sovereign RF Direction Finding &amp; Triangulation',
+    'hero.sub': 'RF C2-System zur Echtzeit-Ortung von Signalquellen mit KrakenSDR-Hardware.<br>Betrieb auf eigener Infrastruktur — oder als gehostetes Portal. Vollständig autark.',
+    'screenshot.cap': 'Simulationsmodus — DOA-Linien, oranges Fehlerpolygon (Einzelbild), grünes Prognosepolygon (kumuliert)',
+    'nav.features': 'Funktionen',
+    'nav.sim': 'Simulation',
+    'nav.ref': 'Referenz',
+    'nav.arch': 'Architektur',
+    'nav.setup': 'Einrichtung',
+    'nav.api': 'API',
+    'nav.faq': 'FAQ',
+    'features.h2': 'Hornet Sentinel v1.4 – Funktionsübersicht',
+    'features.g1': 'Zentrales Lagezentrum &amp; Kartenverwaltung',
+    'f.c1.h': 'Geoinformations-System',
+    'f.c1.p': 'Einbindung offizieller Schweizer Kartendienste (Swisstopo, SwissImage, Orthofoto) für präzise räumliche Orientierung — ergänzt durch Dark- und Light-Basiskarten.',
+    'f.c2.h': 'Dark- &amp; Light-Modus',
+    'f.c2.p': 'Vollständiger Dark- und Light-Modus für optimale Ablesbarkeit bei unterschiedlichen Lichtverhältnissen im Feld.',
+    'f.c3.h': 'Mehrsprachigkeit',
+    'f.c3.p': 'Vollständige Unterstützung in Deutsch, Englisch und Französisch (DE / EN / FR). Sprachpräferenz wird lokal gespeichert.',
+    'features.g2': 'Sensor-Management &amp; Signalerfassung',
+    'f.c4.h': 'Fernverwaltung der Stationen',
+    'f.c4.p': 'Zentrale Steuerung und Überwachung entfernter Messeinheiten inklusive Betriebszustand, Live-Peildaten und Hardware-Telemetrie.',
+    'f.c5.h': 'Präzisions-Peilverfahren',
+    'f.c5.p': 'Implementierung verschiedener mathematischer Verfahren zur genauen Richtungsbestimmung (u.a. MUSIC, Bartlett, Capon). Triangulation aus mehreren Stationen mit Konfidenz-gewichtetem Schätzwert.',
+    'f.c6.h': 'Mehrkanal-Überwachung',
+    'f.c6.p': 'Gleichzeitige Erfassung mehrerer Frequenzen zur Beobachtung komplexer Signalsituationen. Farbcodierung pro Frequenzquelle für schnelle visuelle Zuordnung.',
+    'f.c7.h': 'Referenz-Kalibrierung',
+    'f.c7.p': 'Werkzeuge zum Abgleich von Messpunkten über einen bekannten Referenzsender. Korrekturen werden rückwirkend auf alle historischen Daten angewendet.',
+    'features.g3': 'Einsatzplanung &amp; Analyse',
+    'f.c8.h': 'Telemetrie- &amp; Signalanalyse',
+    'f.c8.p': 'Live-Visualisierung von Signalstärken, Pegel und Qualitätskennwerten zur Identifikation und Bewertung der erfassten Sender.',
+    'f.c9.h': 'Kampagnen-Planung',
+    'f.c9.p': 'Integriertes Modul zur Vorhersage der Funkreichweite, Simulation von Umgebungsverlusten und Optimierung der Stationsplatzierung im Gelände — ohne Datenbankschreibzugriff.',
+    'f.c10.h': 'Verlaufs-Dokumentation',
+    'f.c10.p': 'Auswertung vergangener Zeiträume zur Rekonstruktion von Signalbewegungen und Trends. Flexible Zeitfensterauswahl (1/5/15/30 Min. oder benutzerdefinierter Bereich).',
+    'f.c11.h': 'Wahrscheinlichkeits-Karten',
+    'f.c11.p': 'Visualisierung von Aufenthaltsbereichen durch die Kombination mehrerer Peilvektoren. Heatmap zeigt Signalquell-Schwerpunkte auch bei verrauschten Einzelmessungen.',
+    'features.g4': 'Konnektivität &amp; System-Sicherheit',
+    'f.c12.h': 'Gesicherte Datenübertragung',
+    'f.c12.p': 'Unterstützung für verschlüsselte Verbindungen (HTTPS/TLS) und geschützte Netzwerk-Overlays. Rollenbasiertes Zugriffsmanagement (Admin / Operator / Viewer).',
+    'f.c13.h': 'Effiziente Bereitstellung',
+    'f.c13.p': 'Schnelle Fern-Installation und Aktualisierung der Sensor-Software auf den Zielgeräten — direkt aus dem Portal per SSH, ohne manuellen Zugriff vor Ort.',
+    'f.c14.h': 'Mobile Nutzung',
+    'f.c14.p': 'Optimierte Ansicht für den taktischen Zugriff über Smartphones und Tablets direkt vor Ort. Responsive Toolbar, Off-Canvas-Panel, vollbildfähiges Konfigurationsmenü.',
+    'sim.h2': 'Simulationsmodus',
+    'sim.intro': 'Verstecktes Planungswerkzeug — keine Datenbankschreibzugriffe, rein frontend-seitig. Aktivierung: dreifacher Klick auf das Logo (Desktop) oder ⬡-Schaltfläche (mobil).',
+    'ref.h2': 'Funktionsreferenz',
+    'ref.intro': 'Vollständige Referenz aller Steuerelemente, Ebenen, Modi und Interaktionen.',
+    'arch.h2': 'Systemarchitektur',
+    'arch.intro': 'Hornet Sentinel folgt einer <strong>dezentralen Edge-Computing</strong>-Philosophie — die Signalverarbeitung findet auf dem Sensor statt, nur kompakte Peilungsvektoren erreichen das Portal. Das Backend läuft auf dem eigenen Server (On-Premise) oder als gehosteter Dienst — gleiche Codebasis, freie Wahl.',
+    'setup.h2': 'Schnellstart',
+    'api.h2': 'API-Referenz',
+    'faq.h2': 'FAQ',
+    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)',
+  },
+  en: {
+    'hero.tagline': 'Sovereign RF Direction Finding &amp; Triangulation',
+    'hero.sub': 'RF C2 system for real-time signal source localisation using KrakenSDR hardware.<br>Deploy on your own infrastructure — or use the hosted portal. Fully self-contained.',
+    'screenshot.cap': 'Simulation mode — DOA lines, orange error polygon (single frame), green predict polygon (accumulated)',
+    'nav.features': 'Features',
+    'nav.sim': 'Simulation',
+    'nav.ref': 'Reference',
+    'nav.arch': 'Architecture',
+    'nav.setup': 'Setup',
+    'nav.api': 'API',
+    'nav.faq': 'FAQ',
+    'features.h2': 'Hornet Sentinel v1.4 – Feature Overview',
+    'features.g1': 'Command Centre &amp; Map Management',
+    'f.c1.h': 'Geospatial Mapping',
+    'f.c1.p': 'Integration of official Swiss cartographic services (Swisstopo, SwissImage, Orthophoto) for precise spatial orientation — complemented by Dark and Light basemaps.',
+    'f.c2.h': 'Dark &amp; Light Mode',
+    'f.c2.p': 'Full Dark and Light mode support for optimal readability in varying field lighting conditions.',
+    'f.c3.h': 'Multilingual Interface',
+    'f.c3.p': 'Full support in German, English and French (DE / EN / FR). Language preference stored locally.',
+    'features.g2': 'Sensor Management &amp; Signal Acquisition',
+    'f.c4.h': 'Remote Station Control',
+    'f.c4.p': 'Central monitoring and control of remote measurement units including operational status, live bearing data and hardware telemetry.',
+    'f.c5.h': 'Precision Direction Finding',
+    'f.c5.p': 'Multiple mathematical algorithms for accurate bearing determination (incl. MUSIC, Bartlett, Capon). Triangulation from multiple stations with confidence-weighted estimate.',
+    'f.c6.h': 'Multi-Channel Monitoring',
+    'f.c6.p': 'Simultaneous tracking of multiple frequencies for complex signal scenarios. Colour-coding per frequency source for rapid visual identification.',
+    'f.c7.h': 'Reference Calibration',
+    'f.c7.p': 'Tools for bearing calibration using a known reference transmitter. Corrections applied retroactively to all historical data.',
+    'features.g3': 'Mission Planning &amp; Analysis',
+    'f.c8.h': 'Telemetry &amp; Signal Analysis',
+    'f.c8.p': 'Live visualisation of signal strengths, levels and quality metrics for identification and assessment of detected transmitters.',
+    'f.c9.h': 'Mission Planning',
+    'f.c9.p': 'Integrated module for radio range prediction, environment loss simulation and station placement optimisation in the field — no database writes.',
+    'f.c10.h': 'History &amp; Documentation',
+    'f.c10.p': 'Query past time ranges to reconstruct signal movement and trends. Flexible time window selection (1/5/15/30 min or custom range).',
+    'f.c11.h': 'Probability Maps',
+    'f.c11.p': 'Visualisation of dwell areas by combining multiple bearing vectors. Heatmap highlights signal source density even with noisy individual readings.',
+    'features.g4': 'Connectivity &amp; System Security',
+    'f.c12.h': 'Secure Data Transmission',
+    'f.c12.p': 'Support for encrypted connections (HTTPS/TLS) and protected network overlays. Role-based access control (Admin / Operator / Viewer).',
+    'f.c13.h': 'Efficient Deployment',
+    'f.c13.p': 'Fast remote installation and update of sensor software on target devices — directly from the portal via SSH, no on-site manual access required.',
+    'f.c14.h': 'Mobile Access',
+    'f.c14.p': 'Optimised view for tactical access via smartphones and tablets in the field. Responsive toolbar, off-canvas panel, full-screen config modal.',
+    'sim.h2': 'Simulation Mode',
+    'sim.intro': 'Hidden mission planning tool — no database writes, purely frontend. Activate with a triple-click on the logo (desktop) or the ⬡ button (mobile).',
+    'ref.h2': 'Feature Reference',
+    'ref.intro': 'Complete reference for all controls, layers, modes and interactions.',
+    'arch.h2': 'System Architecture',
+    'arch.intro': 'Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal. The backend runs on your own server (on-premise) or as a hosted service — same codebase, your choice.',
+    'setup.h2': 'Quick Setup',
+    'api.h2': 'API Reference',
+    'faq.h2': 'FAQ',
+    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)',
+  },
+  fr: {
+    'hero.tagline': 'Radiogoniométrie RF souveraine &amp; Triangulation',
+    'hero.sub': 'Système C2 RF pour la localisation en temps réel de sources de signaux avec le matériel KrakenSDR.<br>Déployez sur votre propre infrastructure — ou utilisez le portail hébergé. Entièrement autonome.',
+    'screenshot.cap': 'Mode simulation — lignes DOA, polygone d\'erreur orange (image unique), polygone de prédiction vert (cumulé)',
+    'nav.features': 'Fonctionnalités',
+    'nav.sim': 'Simulation',
+    'nav.ref': 'Référence',
+    'nav.arch': 'Architecture',
+    'nav.setup': 'Installation',
+    'nav.api': 'API',
+    'nav.faq': 'FAQ',
+    'features.h2': 'Hornet Sentinel v1.4 – Aperçu des fonctionnalités',
+    'features.g1': 'Centre de commandement &amp; Gestion cartographique',
+    'f.c1.h': 'Système d\'information géographique',
+    'f.c1.p': 'Intégration des services cartographiques officiels suisses (Swisstopo, SwissImage, Orthophoto) pour une orientation spatiale précise — complété par des fonds de carte sombre et clair.',
+    'f.c2.h': 'Mode sombre &amp; clair',
+    'f.c2.p': 'Prise en charge complète du mode sombre et clair pour une lisibilité optimale dans toutes les conditions lumineuses sur le terrain.',
+    'f.c3.h': 'Interface multilingue',
+    'f.c3.p': 'Prise en charge complète en allemand, anglais et français (DE / EN / FR). La préférence de langue est enregistrée localement.',
+    'features.g2': 'Gestion des capteurs &amp; Acquisition de signaux',
+    'f.c4.h': 'Gestion à distance des stations',
+    'f.c4.p': 'Contrôle et surveillance centralisés des unités de mesure distantes, incluant l\'état opérationnel, les données de relèvement en direct et la télémétrie matérielle.',
+    'f.c5.h': 'Radiogoniométrie de précision',
+    'f.c5.p': 'Mise en œuvre de diverses méthodes mathématiques pour une détermination précise de la direction (dont MUSIC, Bartlett, Capon). Triangulation à partir de plusieurs stations avec estimation pondérée par la confiance.',
+    'f.c6.h': 'Surveillance multicanale',
+    'f.c6.p': 'Acquisition simultanée de plusieurs fréquences pour l\'observation de situations de signaux complexes. Codage couleur par source de fréquence pour une identification visuelle rapide.',
+    'f.c7.h': 'Calibration de référence',
+    'f.c7.p': 'Outils pour l\'ajustement des points de mesure à l\'aide d\'un émetteur de référence connu. Les corrections sont appliquées rétroactivement à toutes les données historiques.',
+    'features.g3': 'Planification de mission &amp; Analyse',
+    'f.c8.h': 'Télémétrie &amp; Analyse de signal',
+    'f.c8.p': 'Visualisation en direct des niveaux de signal et des indicateurs de qualité pour l\'identification et l\'évaluation des émetteurs détectés.',
+    'f.c9.h': 'Planification de mission',
+    'f.c9.p': 'Module intégré pour la prédiction de la portée radio, la simulation des pertes de propagation et l\'optimisation du placement des stations — sans écriture en base de données.',
+    'f.c10.h': 'Documentation historique',
+    'f.c10.p': 'Analyse des périodes passées pour reconstruire les mouvements et tendances des signaux. Sélection flexible de la fenêtre temporelle (1/5/15/30 min ou plage personnalisée).',
+    'f.c11.h': 'Cartes de probabilité',
+    'f.c11.p': 'Visualisation des zones de présence par combinaison de plusieurs vecteurs de relèvement. La carte de chaleur révèle les zones de concentration des sources, même avec des mesures bruitées.',
+    'features.g4': 'Connectivité &amp; Sécurité du système',
+    'f.c12.h': 'Transmission de données sécurisée',
+    'f.c12.p': 'Prise en charge des connexions chiffrées (HTTPS/TLS) et des overlays réseau protégés. Gestion des accès basée sur les rôles (Admin / Opérateur / Visualiseur).',
+    'f.c13.h': 'Déploiement efficace',
+    'f.c13.p': 'Installation et mise à jour rapides à distance du logiciel capteur sur les appareils cibles — directement depuis le portail via SSH, sans accès manuel sur site.',
+    'f.c14.h': 'Utilisation mobile',
+    'f.c14.p': 'Vue optimisée pour l\'accès tactique via smartphones et tablettes sur le terrain. Barre d\'outils responsive, panneau hors-canevas, menu de configuration plein écran.',
+    'sim.h2': 'Mode Simulation',
+    'sim.intro': 'Outil de planification masqué — aucune écriture en base de données, entièrement côté client. Activation : triple clic sur le logo (bureau) ou bouton ⬡ (mobile).',
+    'ref.h2': 'Référence fonctionnelle',
+    'ref.intro': 'Référence complète de tous les contrôles, couches, modes et interactions.',
+    'arch.h2': 'Architecture système',
+    'arch.intro': 'Hornet Sentinel suit une philosophie d\'<strong>informatique en périphérie distribuée</strong> — le traitement du signal s\'effectue sur le capteur, seuls des vecteurs de relèvement compacts parviennent au portail. Le backend tourne sur votre propre serveur (sur site) ou en tant que service hébergé — même base de code, votre choix.',
+    'setup.h2': 'Installation rapide',
+    'api.h2': 'Référence API',
+    'faq.h2': 'FAQ',
+    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Développé par Patrick Hak (HB9HDH)',
+  }
+};
 
-  // Highlight active nav on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('nav a');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
-      }
-    });
-  }, { threshold: 0.3 });
-  sections.forEach(s => observer.observe(s));
+function setLang(lang) {
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[lang] && T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.id === 'btn-' + lang);
+  });
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+setLang(localStorage.getItem('lang') || 'de');
 </script>
 </body>
 </html>

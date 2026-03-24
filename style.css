@@ -284,3 +284,25 @@ footer {
   .step { flex-direction: column; gap: 8px; }
   nav a { padding: 12px 14px; font-size: 13px; }
 }
+
+/* ── Lang switcher ───────────────────────────────────────────────────────── */
+.lang-switcher {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.lang-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.lang-btn:hover { border-color: var(--accent2); color: var(--text); }
+.lang-btn.active { border-color: var(--accent2); color: var(--accent2); }
