@@ -15,8 +15,8 @@
   <div class="hero-inner">
     <div class="badge">⬡ HORNET<span>SENTINEL</span></div>
     <p class="tagline">Sovereign RF Direction Finding &amp; Triangulation</p>
-    <p class="sub">On-premise C2 system for real-time signal source localisation using KrakenSDR hardware.<br>
-    No cloud dependency — fully autonomous infrastructure.</p>
+    <p class="sub">RF C2 system for real-time signal source localisation using KrakenSDR hardware.<br>
+    Deploy on your own infrastructure — or use the hosted portal. Fully self-contained.</p>
     <div class="hero-tags">
       <span>KrakenSDR</span><span>DOA / TDOA</span><span>Leaflet.js</span>
       <span>PostgreSQL</span><span>Docker</span><span>VPN-agnostic</span>
@@ -450,7 +450,7 @@ Position error ≈ distance × tan(noise_angle)
 <!-- ── Architecture ──────────────────────────────────────────────────────────── -->
 <section id="architecture">
   <h2>System Architecture</h2>
-  <p class="section-intro">Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal.</p>
+  <p class="section-intro">Hornet Sentinel follows a <strong>Distributed Edge Computing</strong> philosophy — signal processing happens on the sensor, only compact bearing vectors reach the portal. The backend runs on your own server (on-premise) or as a hosted service — same codebase, your choice.</p>
 
   <div class="mermaid">
 graph TD
@@ -463,17 +463,16 @@ graph TD
         C -->|HTTPS + API Key| D[ZeroTier VPN / Internet]
     end
 
-    subgraph CLOUD["Cloud Infrastructure"]
-        D --> E[Hetzner VM · Ubuntu · Docker]
+    subgraph BACKEND["Backend — Cloud or On-Prem"]
+        D --> E[Linux Server · Docker]
         E --> F[(PostgreSQL)]
-        E --> G[Portal · hornetsentinel.hak-digital.ch]
-        H[Cloudflare Pages] --> I[Landing · hornetsentinel.ch]
+        E --> G[Web Portal]
     end
 
     style B fill:#f96,stroke:#333,stroke-width:2px
     style G fill:#2ecc71,stroke:#333,stroke-width:2px
     style D fill:#3498db,stroke:#333,stroke-width:1px
-    style H fill:#f38020,stroke:#333,stroke-width:1px
+    style E fill:#2ecc71,stroke:#333,stroke-width:1px
   </div>
 
   <p style="font-size:12px;opacity:.6;text-align:center;margin-top:6px">
@@ -483,14 +482,29 @@ graph TD
   <h3 style="margin-top:32px">Deployment Scenarios</h3>
   <table>
     <thead>
-      <tr><th>Scenario</th><th>Hardware</th><th>Network</th><th>Best For</th></tr>
+      <tr><th>Scenario</th><th>Infrastructure</th><th>Advantages</th></tr>
     </thead>
     <tbody>
-      <tr><td><strong>Tactical / Mobile</strong></td><td>KrakenSDR + RPi (single unit)</td><td>Local WiFi / Hotspot</td><td>Offline field work, direct tracking</td></tr>
-      <tr><td><strong>Distributed Network</strong></td><td>Multiple KrakenSDR sensors</td><td>LTE / ZeroTier VPN</td><td>Multi-station triangulation, large area coverage</td></tr>
-      <tr><td><strong>Sovereign / On-Prem</strong></td><td>Local server or VM</td><td>Private LAN / WireGuard</td><td>Air-gapped or high-security environments</td></tr>
+      <tr>
+        <td><strong>On-Premise</strong></td>
+        <td>Local server or VM — your hardware, your network</td>
+        <td>Full data sovereignty · No external dependency · Works air-gapped · No subscription</td>
+      </tr>
+      <tr>
+        <td><strong>Cloud-Hosted</strong></td>
+        <td>Any Linux VPS with Docker</td>
+        <td>No hardware to maintain · Accessible from anywhere · Instant setup · Scales with demand</td>
+      </tr>
+      <tr>
+        <td><strong>Tactical / Mobile</strong></td>
+        <td>KrakenSDR + RPi, local hotspot only</td>
+        <td>Fully offline · Single operator · Direct field use</td>
+      </tr>
     </tbody>
   </table>
+  <p style="font-size:12px;opacity:.6;margin-top:10px">
+    The portal is currently available as a hosted service — self-hosting via Docker Compose is supported with the same feature set.
+  </p>
 
   <h3 style="margin-top:24px">Why Edge Processing?</h3>
   <div class="code-block">Raw IQ stream  →  ~50–200 MB/s   (unusable over LTE)
