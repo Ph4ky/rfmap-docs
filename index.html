@@ -475,34 +475,67 @@ graph LR
         GPS[GPS + Compass] --> VEC
     end
 
-    subgraph NET["Secure Transport — ZeroTier VPN"]
-        T((Encrypted Tunnel))
-    end
-
     subgraph PORTAL["Portal — Docker"]
-        E[Node.js API + WebSocket :2096]
-        F[(PostgreSQL + PostGIS)]
+        WS["WSS :2096\n✅ TLS — Nginx terminiert"]
+        HTTP["HTTP :8080\n⚠ plain — KrakenSDR\nlehnt self-signed ab"]
+        API[Node.js API]
+        DB[(PostgreSQL + PostGIS)]
         G[Web Portal]
-        E <--> F
-        G <--> E
+        WS --> API
+        HTTP --> API
+        API <--> DB
+        G <--> API
     end
 
-    VEC -->|"DOA reports  POST :8080 / WS :2096"| T
-    SDR -->|"Health telemetry  POST every 15 s"| T
-    T --> E
+    VEC -->|"ws_mode = zt\nZeroTier VPN"| WS
+    VEC -->|"ws_mode = internet\nöffentliches Internet"| WS
+    WS -->|"Config-Push — sofort\nkein Neustart"| SDR
 
-    E -->|"Config push  WebSocket :2096"| T
-    T -->|"Start / Stop / Reboot  SSH fallback"| SDR
+    VEC -->|"ws_mode = off Standard\nHTTP POST /save.php"| HTTP
+    HTTP -.->|"SSH/SFTP + Restart\nFallback"| SDR
+
+    SDR -->|"Health  15 s"| API
 
     style SDR fill:#f96,stroke:#333,stroke-width:2px
     style G fill:#2ecc71,stroke:#333,stroke-width:2px
-    style T fill:#3498db,stroke:#333,stroke-width:1px
-    style E fill:#2ecc71,stroke:#333,stroke-width:1px
+    style WS fill:#1a3a5c,stroke:#3498db,stroke-width:2px
+    style HTTP fill:#3a2a1a,stroke:#f96,stroke-width:1px,stroke-dasharray:4
+    style API fill:#2ecc71,stroke:#333,stroke-width:1px
   </div>
 
   <p style="font-size:12px;opacity:.6;text-align:center;margin-top:6px">
-    The KrakenSDR Pi processes raw IQ data locally — only the resulting bearing vector (a few bytes of JSON) is transmitted. This allows operation over LTE with minimal bandwidth.
+    Der Transportweg wird pro Station über <code>ws_mode</code> konfiguriert. KrakenSDR-Firmware lehnt selbstsignierte Zertifikate ab — daher bleibt der Legacy-HTTP-Pfad unverschlüsselt, ist aber innerhalb des VPN-Tunnels geschützt.
   </p>
+
+  <h3 style="margin-top:28px">Transportmodus — Abhängigkeit von ws_mode</h3>
+  <table>
+    <thead>
+      <tr><th>ws_mode</th><th>Uplink (DOA-Daten)</th><th>Downlink (Config / Steuerung)</th><th>TLS</th><th>Netzwerk</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>zt</code></td>
+        <td>WSS :2096 (WebSocket)</td>
+        <td>Config-Push via WS — sofort, kein Neustart</td>
+        <td>✅ Nginx TLS</td>
+        <td>ZeroTier VPN</td>
+      </tr>
+      <tr>
+        <td><code>internet</code></td>
+        <td>WSS :2096 (WebSocket)</td>
+        <td>Config-Push via WS — sofort, kein Neustart</td>
+        <td>✅ Nginx TLS</td>
+        <td>Öffentliches Internet</td>
+      </tr>
+      <tr>
+        <td><code>off</code> (Standard)</td>
+        <td>HTTP POST :8080 /save.php</td>
+        <td>SSH/SFTP schreibt settings.json + Neustart</td>
+        <td>⚠ plain HTTP — im VPN-Tunnel</td>
+        <td>ZeroTier VPN</td>
+      </tr>
+    </tbody>
+  </table>
 
   <h3 style="margin-top:32px">Deployment Scenarios</h3>
   <table>
