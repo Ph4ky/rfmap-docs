@@ -475,11 +475,19 @@ graph LR
         GPS[GPS + Compass] --> VEC
     end
 
+    subgraph VPN["🔒 ZeroTier VPN-Tunnel"]
+        V(( ))
+    end
+
+    subgraph INET["🌐 Internet — kein VPN"]
+        I(( ))
+    end
+
     subgraph PORTAL["Portal — Docker"]
-        WS["WSS :2096\n✅ TLS — Nginx terminiert"]
-        HTTP["HTTP :8080\n⚠ plain — KrakenSDR\nlehnt self-signed ab"]
+        WS["WSS :2096\nTLS via Nginx"]
+        HTTP["HTTP :8080\nplain"]
         API[Node.js API]
-        DB[(PostgreSQL + PostGIS)]
+        DB[(PostgreSQL)]
         G[Web Portal]
         WS --> API
         HTTP --> API
@@ -487,52 +495,60 @@ graph LR
         G <--> API
     end
 
-    VEC -->|"ws_mode = zt\nZeroTier VPN"| WS
-    VEC -->|"ws_mode = internet\nöffentliches Internet"| WS
-    WS -->|"Config-Push — sofort\nkein Neustart"| SDR
+    VEC -->|"ws_mode=zt\nWSS + VPN"| V --> WS
+    VEC -->|"ws_mode=off\nHTTP plain"| V --> HTTP
+    VEC -->|"ws_mode=internet\nWSS only"| I --> WS
 
-    VEC -->|"ws_mode = off Standard\nHTTP POST /save.php"| HTTP
-    HTTP -.->|"SSH/SFTP + Restart\nFallback"| SDR
-
-    SDR -->|"Health  15 s"| API
+    WS -->|"Config-Push sofort"| V --> SDR
+    HTTP -.->|"SSH/SFTP + Restart"| V -.-> SDR
+    SDR -->|"Health 15 s"| V --> API
 
     style SDR fill:#f96,stroke:#333,stroke-width:2px
     style G fill:#2ecc71,stroke:#333,stroke-width:2px
     style WS fill:#1a3a5c,stroke:#3498db,stroke-width:2px
-    style HTTP fill:#3a2a1a,stroke:#f96,stroke-width:1px,stroke-dasharray:4
+    style HTTP fill:#3a2a1a,stroke:#e07050,stroke-width:1px,stroke-dasharray:4
+    style V fill:#1e3a1e,stroke:#3fb950,stroke-width:2px
+    style I fill:#2a2a1a,stroke:#ffa657,stroke-width:1px
     style API fill:#2ecc71,stroke:#333,stroke-width:1px
   </div>
 
-  <p style="font-size:12px;opacity:.6;text-align:center;margin-top:6px">
-    Der Transportweg wird pro Station über <code>ws_mode</code> konfiguriert. KrakenSDR-Firmware lehnt selbstsignierte Zertifikate ab — daher bleibt der Legacy-HTTP-Pfad unverschlüsselt, ist aber innerhalb des VPN-Tunnels geschützt.
-  </p>
-
-  <h3 style="margin-top:28px">Transportmodus — Abhängigkeit von ws_mode</h3>
+  <h3 style="margin-top:28px">Kommunikationspfade — Sicherheit je nach Konfiguration</h3>
   <table>
     <thead>
-      <tr><th>ws_mode</th><th>Uplink (DOA-Daten)</th><th>Downlink (Config / Steuerung)</th><th>TLS</th><th>Netzwerk</th></tr>
+      <tr><th>Szenario</th><th>ws_mode</th><th>Netzwerk</th><th>Uplink</th><th>Downlink</th><th>Verschlüsselung</th></tr>
     </thead>
     <tbody>
       <tr>
+        <td>✅ <strong>VPN + WebSocket</strong></td>
         <td><code>zt</code></td>
-        <td>WSS :2096 (WebSocket)</td>
-        <td>Config-Push via WS — sofort, kein Neustart</td>
-        <td>✅ Nginx TLS</td>
         <td>ZeroTier VPN</td>
+        <td>WSS :2096</td>
+        <td>Config-Push WS — sofort</td>
+        <td>🔒🔒 VPN-Tunnel <em>und</em> TLS</td>
       </tr>
       <tr>
+        <td>✅ <strong>Internet + WebSocket</strong></td>
         <td><code>internet</code></td>
-        <td>WSS :2096 (WebSocket)</td>
-        <td>Config-Push via WS — sofort, kein Neustart</td>
-        <td>✅ Nginx TLS</td>
         <td>Öffentliches Internet</td>
+        <td>WSS :2096</td>
+        <td>Config-Push WS — sofort</td>
+        <td>🔒 TLS (Nginx terminiert)</td>
       </tr>
       <tr>
+        <td>⚠ <strong>VPN + HTTP</strong></td>
         <td><code>off</code> (Standard)</td>
-        <td>HTTP POST :8080 /save.php</td>
-        <td>SSH/SFTP schreibt settings.json + Neustart</td>
-        <td>⚠ plain HTTP — im VPN-Tunnel</td>
         <td>ZeroTier VPN</td>
+        <td>HTTP :8080 /save.php</td>
+        <td>SSH/SFTP + Neustart</td>
+        <td>🔒 VPN-Tunnel — kein TLS<br><small>KrakenSDR-Firmware akzeptiert kein self-signed Cert</small></td>
+      </tr>
+      <tr>
+        <td>❌ <strong>Internet + HTTP</strong></td>
+        <td><code>off</code></td>
+        <td>Öffentliches Internet</td>
+        <td>HTTP :8080</td>
+        <td>SSH/SFTP</td>
+        <td>❌ unverschlüsselt — nicht empfohlen</td>
       </tr>
     </tbody>
   </table>
