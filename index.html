@@ -35,6 +35,7 @@
   <a href="#setup" data-i18n="nav.setup">Einrichtung</a>
   <a href="#api" data-i18n="nav.api">API</a>
   <a href="#faq" data-i18n="nav.faq">FAQ</a>
+  <a href="#android" data-i18n="nav.android">Android</a>
   <div class="lang-switcher">
     <button class="lang-btn" id="btn-de" onclick="setLang('de')">DE</button>
     <button class="lang-btn" id="btn-fr" onclick="setLang('fr')">FR</button>
@@ -55,7 +56,7 @@
 
 <!-- ── Features ─────────────────────────────────────────────────────────────── -->
 <section id="features">
-  <h2 data-i18n="features.h2">Hornet Sentinel v1.4 – Funktionsübersicht</h2>
+  <h2 data-i18n="features.h2">Hornet Sentinel v1.5 – Funktionsübersicht</h2>
 
   <h3 class="feature-group" data-i18n="features.g1">Zentrales Lagezentrum &amp; Kartenverwaltung</h3>
   <div class="card-grid">
@@ -673,7 +674,8 @@ Portal (Docker)
       <tr><td>PUT</td><td>/api/station/:id/config</td><td>X-Api-Key</td><td>Save station config</td></tr>
       <tr><td>PUT</td><td>/api/stations/config</td><td>X-Api-Key</td><td>Push config to all stations</td></tr>
       <tr><td>POST</td><td>/api/station/:id/deploy</td><td>X-Api-Key</td><td>SSH-deploy config sync script</td></tr>
-      <tr><td>POST</td><td>/api/station/:id/control</td><td>X-Api-Key</td><td>Start / stop / status DOA process</td></tr>
+      <tr><td>POST</td><td>/api/station/:id/control</td><td>X-Api-Key</td><td>Start / stop / status / restart DOA process</td></tr>
+      <tr><td>POST</td><td>/api/stations/restart-all</td><td>X-Api-Key</td><td>Restart all stations in parallel via SSH</td></tr>
       <tr><td>DELETE</td><td>/api/station/:id</td><td>X-Api-Key</td><td>Delete station + all data</td></tr>
       <tr><td>PATCH</td><td>/api/station/:id/enabled</td><td>X-Api-Key / Session</td><td>Enable or disable a station</td></tr>
       <tr><td>POST</td><td>/api/station/:id/health</td><td>X-Api-Key</td><td>Report per-channel antenna health (CH0–CH4)</td></tr>
@@ -758,9 +760,82 @@ Portal (Docker)
   </details>
 </section>
 
+<!-- ── Android ───────────────────────────────────────────────────────────────── -->
+<section id="android">
+  <h2 data-i18n="android.h2">Mobile Sensor-Integration: Android SDR-App</h2>
+  <p class="section-intro" data-i18n="android.intro">Proprietäre Android-Applikation als mobiler Sensor-Knoten — ergänzt die stationären KrakenSDR-Einheiten im Nahbereich («die letzte Meile») und ermöglicht eine dynamische, kooperative Suche direkt im Gelände.</p>
+
+  <div style="text-align:center;margin:0 0 36px">
+    <img src="https://raw.githubusercontent.com/Ph4ky/rfmap/master/android/Screenshot_20260328_115020.jpg"
+         alt="HornetSentinel Android App"
+         style="max-width:320px;width:100%;border-radius:12px;box-shadow:0 4px 32px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.08)">
+  </div>
+
+  <h3 data-i18n="android.arch.h">Technische Systemarchitektur (Sensor-Fusion)</h3>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-icon">📻</div>
+      <h3 data-i18n="android.c1.h">Hardware-Interface (SDR)</h3>
+      <p data-i18n="android.c1.p">Über USB-OTG steuert die App ein kompaktes SDR-Frontend an. Der HF-Datenstrom der Ziel-Telemetrie wird in Echtzeit verarbeitet und die aktuelle Signalstärke (RSSI) berechnet.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🛰️</div>
+      <h3 data-i18n="android.c2.h">Daten-Korrelation (GNSS + IMU)</h3>
+      <p data-i18n="android.c2.p">Funkparameter werden synchron mit internen Smartphone-Sensoren verknüpft: GNSS (GPS) für hochpräzise Standortbestimmung des Operators und IMU (Magnetometer + Gyro) für den exakten Heading der Richtantenne.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">☁️</div>
+      <h3 data-i18n="android.c3.h">Zentrales Datenmanagement</h3>
+      <p data-i18n="android.c3.p">Aggregierte Datensätze (Position, Richtung, Signalstärke) werden verschlüsselt via REST-Webservice an das Analyse-Portal übermittelt und in die Echtzeit-Lagedarstellung integriert.</p>
+    </div>
+
+  </div>
+
+  <h3 data-i18n="android.func.h">Funktionsweise &amp; Netzwerkintegration</h3>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-icon">🎧</div>
+      <h3 data-i18n="android.c4.h">Interaktive Peilung</h3>
+      <p data-i18n="android.c4.p">Intuitive Visualisierung der Signalstärke grafisch und akustisch (RSSI-Ton mit variabler Tonhöhe). Unterstützt den Anwender bei der manuellen Richtungsbestimmung im Gelände — auch ohne Blick aufs Display.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔥</div>
+      <h3 data-i18n="android.c5.h">Dynamische Heatmap-Fusion</h3>
+      <p data-i18n="android.c5.p">Im zentralen Portal werden die Vektoren der mobilen Einheiten mit den stationären KrakenSDR-Nodes fusioniert. Ergebnis: eine Echtzeit-Lagedarstellung, die den Suchradius für Einsatzkräfte massiv eingrenzt.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h3 data-i18n="android.c6.h">Proprietär &amp; Urheberrechtlich geschützt</h3>
+      <p data-i18n="android.c6.p">Die App ist proprietäres Eigentum von Patrick Hak / hak-digital.ch. Der Quellcode ist privat. Eine Vervielfältigung, Dekompilierung oder Nutzung ohne ausdrückliche schriftliche Genehmigung ist untersagt.</p>
+    </div>
+
+  </div>
+
+  <h3>Technische Spezifikationen</h3>
+  <table>
+    <thead><tr><th>Komponente</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td>Hardware-Interface</td><td>USB-OTG → RTL-SDR (RTL2832U + R820T)</td></tr>
+      <tr><td>IQ-Verarbeitung</td><td>1.024 MHz Abtastrate → 128× Decimation → 8 kHz Audio</td></tr>
+      <tr><td>Demodulation</td><td>DSB (Hüllkurve) / CW (BFO 700 Hz + IIR-Bandpass)</td></tr>
+      <tr><td>Squelch</td><td>Audio-RSSI, ±1 / ±5 dBFS Schritte, Auto-Set</td></tr>
+      <tr><td>RSSI-Ton</td><td>300–1200 Hz proportional zu Signalstärke (hands-free DF)</td></tr>
+      <tr><td>Positionierung</td><td>GNSS (GPS) + IMU Sensor-Fusion</td></tr>
+      <tr><td>Datenübertragung</td><td>REST-API → Portal (HTTPS)</td></tr>
+      <tr><td>Copyright</td><td>© 2024–2026 Patrick Hak / hak-digital.ch — All rights reserved</td></tr>
+    </tbody>
+  </table>
+</section>
+
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <p data-i18n="footer.credit">Hornet Sentinel v1.4 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)</p>
+  <p data-i18n="footer.credit">Hornet Sentinel v1.5 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)</p>
   <p style="margin-top:4px;font-size:12px;opacity:.85">© 2026 Patrick Hak</p>
   <p style="margin-top:6px;font-size:12px;opacity:.7">
     <a href="https://github.com/Ph4ky/rfmap" style="color:inherit">github.com/Ph4ky/rfmap</a>
@@ -782,7 +857,8 @@ const T = {
     'nav.setup': 'Einrichtung',
     'nav.api': 'API',
     'nav.faq': 'FAQ',
-    'features.h2': 'Hornet Sentinel v1.4 – Funktionsübersicht',
+    'nav.android': 'Android',
+    'features.h2': 'Hornet Sentinel v1.5 – Funktionsübersicht',
     'features.g1': 'Zentrales Lagezentrum &amp; Kartenverwaltung',
     'f.c1.h': 'Geoinformations-System',
     'f.c1.p': 'Einbindung offizieller Schweizer Kartendienste (Swisstopo, SwissImage, Orthofoto) für präzise räumliche Orientierung — ergänzt durch Dark- und Light-Basiskarten.',
@@ -824,7 +900,23 @@ const T = {
     'setup.h2': 'Schnellstart',
     'api.h2': 'API-Referenz',
     'faq.h2': 'FAQ',
-    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)',
+    'android.h2': 'Mobile Sensor-Integration: Android SDR-App',
+    'android.intro': 'Proprietäre Android-Applikation als mobiler Sensor-Knoten — ergänzt die stationären KrakenSDR-Einheiten im Nahbereich («die letzte Meile») und ermöglicht eine dynamische, kooperative Suche direkt im Gelände.',
+    'android.arch.h': 'Technische Systemarchitektur (Sensor-Fusion)',
+    'android.c1.h': 'Hardware-Interface (SDR)',
+    'android.c1.p': 'Über USB-OTG steuert die App ein kompaktes SDR-Frontend an. Der HF-Datenstrom der Ziel-Telemetrie wird in Echtzeit verarbeitet und die aktuelle Signalstärke (RSSI) berechnet.',
+    'android.c2.h': 'Daten-Korrelation (GNSS + IMU)',
+    'android.c2.p': 'Funkparameter werden synchron mit internen Smartphone-Sensoren verknüpft: GNSS (GPS) für hochpräzise Standortbestimmung des Operators und IMU (Magnetometer + Gyro) für den exakten Heading der Richtantenne.',
+    'android.c3.h': 'Zentrales Datenmanagement',
+    'android.c3.p': 'Aggregierte Datensätze (Position, Richtung, Signalstärke) werden verschlüsselt via REST-Webservice an das Analyse-Portal übermittelt und in die Echtzeit-Lagedarstellung integriert.',
+    'android.func.h': 'Funktionsweise &amp; Netzwerkintegration',
+    'android.c4.h': 'Interaktive Peilung',
+    'android.c4.p': 'Intuitive Visualisierung der Signalstärke grafisch und akustisch (RSSI-Ton mit variabler Tonhöhe). Unterstützt den Anwender bei der manuellen Richtungsbestimmung im Gelände — auch ohne Blick aufs Display.',
+    'android.c5.h': 'Dynamische Heatmap-Fusion',
+    'android.c5.p': 'Im zentralen Portal werden die Vektoren der mobilen Einheiten mit den stationären KrakenSDR-Nodes fusioniert. Ergebnis: eine Echtzeit-Lagedarstellung, die den Suchradius für Einsatzkräfte massiv eingrenzt.',
+    'android.c6.h': 'Proprietär &amp; Urheberrechtlich geschützt',
+    'android.c6.p': 'Die App ist proprietäres Eigentum von Patrick Hak / hak-digital.ch. Der Quellcode ist privat. Eine Vervielfältigung, Dekompilierung oder Nutzung ohne ausdrückliche schriftliche Genehmigung ist untersagt.',
+    'footer.credit': 'Hornet Sentinel v1.5 · Sovereign Edition · Entwickelt von Patrick Hak (HB9HDH)',
     'faq.q1': 'Warum ändert das Fehlerpolygon seine Grösse, wenn ich das Ziel verschiebe?',
     'faq.a1': 'Zwei geometrische Effekte: <strong>Schnittwinkel (GDOP)</strong> — nahezu parallele Linien erzeugen einen riesigen, instabilen Schnittpunkt. Und <strong>Distanz</strong> — gleicher Winkelfehler bei 5 km = 5× grösserer Positionsfehler als bei 1 km. Optimal: Stationen umgeben das Ziel mit ~60–90° Schnittwinkeln.',
     'faq.q2': 'Warum verschwindet eine Station in der Simulation?',
@@ -858,7 +950,8 @@ const T = {
     'nav.setup': 'Setup',
     'nav.api': 'API',
     'nav.faq': 'FAQ',
-    'features.h2': 'Hornet Sentinel v1.4 – Feature Overview',
+    'nav.android': 'Android',
+    'features.h2': 'Hornet Sentinel v1.5 – Feature Overview',
     'features.g1': 'Command Centre &amp; Map Management',
     'f.c1.h': 'Geospatial Mapping',
     'f.c1.p': 'Integration of official Swiss cartographic services (Swisstopo, SwissImage, Orthophoto) for precise spatial orientation — complemented by Dark and Light basemaps.',
@@ -900,7 +993,23 @@ const T = {
     'setup.h2': 'Quick Setup',
     'api.h2': 'API Reference',
     'faq.h2': 'FAQ',
-    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)',
+    'android.h2': 'Mobile Sensor Integration: Android SDR App',
+    'android.intro': 'Proprietary Android application as a mobile sensor node — complements stationary KrakenSDR units in the close-range («last mile») and enables dynamic, cooperative search directly in the field.',
+    'android.arch.h': 'Technical System Architecture (Sensor Fusion)',
+    'android.c1.h': 'Hardware Interface (SDR)',
+    'android.c1.p': 'Via USB-OTG, the app controls a compact SDR frontend. The RF data stream of the target telemetry is processed in real time, computing current signal strength (RSSI).',
+    'android.c2.h': 'Data Correlation (GNSS + IMU)',
+    'android.c2.p': 'Radio parameters are synchronously correlated with internal smartphone sensors: GNSS (GPS) for high-precision operator positioning and IMU (magnetometer + gyro) for exact directional antenna heading.',
+    'android.c3.h': 'Central Data Management',
+    'android.c3.p': 'Aggregated datasets (position, heading, signal strength) are transmitted encrypted via REST web service to the analysis portal and integrated into the real-time situational display.',
+    'android.func.h': 'Operation &amp; Network Integration',
+    'android.c4.h': 'Interactive Direction Finding',
+    'android.c4.p': 'Intuitive visualisation of signal strength — graphical and acoustic (variable-pitch RSSI tone). Supports the operator in manual direction finding in the field, even without looking at the display.',
+    'android.c5.h': 'Dynamic Heatmap Fusion',
+    'android.c5.p': 'In the central portal, vectors from mobile units are fused with stationary KrakenSDR nodes. Result: a real-time situational picture that massively narrows the search radius for field teams.',
+    'android.c6.h': 'Proprietary &amp; Copyright Protected',
+    'android.c6.p': 'The app is the proprietary property of Patrick Hak / hak-digital.ch. Source code is private. Reproduction, decompilation or use without explicit written permission is prohibited.',
+    'footer.credit': 'Hornet Sentinel v1.5 · Sovereign Edition · Developed by Patrick Hak (HB9HDH)',
     'faq.q1': 'Why does the error polygon change size when I move the target?',
     'faq.a1': 'Two geometric effects: <strong>cut angle (GDOP)</strong> — lines near-parallel to each other produce a huge, unstable intersection. And <strong>distance</strong> — same angular noise at 5 km = 5× larger position error than at 1 km. Optimal: stations surrounding the target with ~60–90° cut angles.',
     'faq.q2': 'Why does a station disappear in simulation?',
@@ -934,7 +1043,8 @@ const T = {
     'nav.setup': 'Installation',
     'nav.api': 'API',
     'nav.faq': 'FAQ',
-    'features.h2': 'Hornet Sentinel v1.4 – Aperçu des fonctionnalités',
+    'nav.android': 'Android',
+    'features.h2': 'Hornet Sentinel v1.5 – Aperçu des fonctionnalités',
     'features.g1': 'Centre de commandement &amp; Gestion cartographique',
     'f.c1.h': 'Système d\'information géographique',
     'f.c1.p': 'Intégration des services cartographiques officiels suisses (Swisstopo, SwissImage, Orthophoto) pour une orientation spatiale précise — complété par des fonds de carte sombre et clair.',
@@ -976,7 +1086,23 @@ const T = {
     'setup.h2': 'Installation rapide',
     'api.h2': 'Référence API',
     'faq.h2': 'FAQ',
-    'footer.credit': 'Hornet Sentinel v1.4 · Sovereign Edition · Développé par Patrick Hak (HB9HDH)',
+    'android.h2': 'Intégration Capteur Mobile : App Android SDR',
+    'android.intro': 'Application Android propriétaire comme nœud capteur mobile — complète les unités KrakenSDR stationnaires sur le «dernier kilomètre» et permet une recherche dynamique et coopérative directement sur le terrain.',
+    'android.arch.h': 'Architecture Technique (Fusion de capteurs)',
+    'android.c1.h': 'Interface matérielle (SDR)',
+    'android.c1.p': 'Via USB-OTG, l\'app pilote un frontend SDR compact. Le flux de données RF de la télémétrie cible est traité en temps réel pour calculer la puissance du signal (RSSI).',
+    'android.c2.h': 'Corrélation de données (GNSS + IMU)',
+    'android.c2.p': 'Les paramètres radio sont corrélés synchroniquement avec les capteurs internes du smartphone : GNSS (GPS) pour la localisation précise de l\'opérateur et IMU (magnétomètre + gyro) pour le cap exact de l\'antenne directionnelle.',
+    'android.c3.h': 'Gestion centralisée des données',
+    'android.c3.p': 'Les jeux de données agrégés (position, cap, puissance du signal) sont transmis chiffrés via REST au portail d\'analyse et intégrés dans l\'image opérationnelle en temps réel.',
+    'android.func.h': 'Fonctionnement &amp; Intégration réseau',
+    'android.c4.h': 'Goniométrie interactive',
+    'android.c4.p': 'Visualisation intuitive de la puissance du signal — graphique et acoustique (tonalité RSSI à hauteur variable). Aide l\'opérateur à la détermination manuelle de direction sur le terrain, même sans regarder l\'écran.',
+    'android.c5.h': 'Fusion Heatmap dynamique',
+    'android.c5.p': 'Dans le portail central, les vecteurs des unités mobiles sont fusionnés avec les nœuds KrakenSDR stationnaires. Résultat : une image de situation en temps réel qui réduit massivement le rayon de recherche.',
+    'android.c6.h': 'Propriétaire &amp; protégé par le droit d\'auteur',
+    'android.c6.p': 'L\'application est la propriété exclusive de Patrick Hak / hak-digital.ch. Le code source est privé. Toute reproduction, décompilation ou utilisation sans autorisation écrite explicite est interdite.',
+    'footer.credit': 'Hornet Sentinel v1.5 · Sovereign Edition · Développé par Patrick Hak (HB9HDH)',
     'faq.q1': 'Pourquoi le polygone d\'erreur change-t-il de taille quand je déplace la cible ?',
     'faq.a1': 'Deux effets géométriques : <strong>angle de coupe (GDOP)</strong> — des lignes quasi-parallèles produisent une intersection énorme et instable. Et la <strong>distance</strong> — le même bruit angulaire à 5 km = 5× plus grande erreur de position qu\'à 1 km. Optimal : stations encerclant la cible avec des angles de coupe de ~60–90°.',
     'faq.q2': 'Pourquoi une station disparaît-elle en simulation ?',
